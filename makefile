@@ -30,27 +30,29 @@ dev-down:
 ### Define tasks run inside Docker
 
 docker-run-in-cicd:
-	# Run bash command(s) in (non-dev) Docker container.
-
 	docker run --rm \
 	    --network none \
 	    --volume $$(pwd)/workspace:/home/host_user/workspace \
 	    --workdir /home/host_user/workspace/ \
-	    pynb-dag-runner-cicd \
+	    mnist-demo-pipeline-cicd \
 	    "$(COMMAND)"
 
+
+### Outline for testing and running demo pipeline; Implementation TODO
+
 clean:
-	make COMMAND="(cd pynb_dag_runner; make clean)" docker-run-in-cicd
+	make COMMAND="(cd .; echo todo-clean)" docker-run-in-cicd
 
 build:
-	make COMMAND="(cd pynb_dag_runner; make build)" docker-run-in-cicd
+	make COMMAND="(cd .; echo todo-build)" docker-run-in-cicd
 
 test:
 	# Run all tests for library
 	make COMMAND="( \
-	    cd pynb_dag_runner; \
-	    make \
-	        test-pytest \
+	    cd .; \
+	    echo \
+	        todo \
+			test-pytest \
 	        test-mypy \
 	        test-black \
 	)" docker-run-in-cicd
