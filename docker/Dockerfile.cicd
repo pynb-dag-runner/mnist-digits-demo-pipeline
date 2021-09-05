@@ -1,9 +1,13 @@
 # Docker image for testing and building pynb-dag-runner library
 # Used by ci/cd (automated tests and build process) in Github.
 
-FROM pynb-dag-runner-base
+FROM mnist-demo-pipeline-base
 
-COPY requirements.txt /home/host_user/
+COPY pynb-dag-runner/workspace/pynb_dag_runner/dist/pynb_dag_runner-*-py3-none-any.whl \
+     /home/host_user/
+RUN pip3 install --user /home/host_user/pynb_dag_runner-*-py3-none-any.whl
+
+COPY docker/requirements.txt /home/host_user/
 RUN pip3 install --user -r /home/host_user/requirements.txt
 
 RUN pip3 install --user \

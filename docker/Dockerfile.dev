@@ -1,4 +1,4 @@
-FROM pynb-dag-runner-cicd
+FROM mnist-demo-pipeline-cicd
 
 # Docker image for
 #  - interactive Jupyter development

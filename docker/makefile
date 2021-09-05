@@ -12,11 +12,13 @@ build-base-env-docker-image:
 	    .
 
 build-cicd-env-docker-image:
+	# (Below docker context is mnist-demo-pipeline repo root so we can access
+	# wheel-file built into pynb-dag-runner submodule.)
 	docker \
 	    build \
 	    --file Dockerfile.cicd \
 	    --tag mnist-demo-pipeline-cicd \
-	    .
+	    ..
 
 JUPYTER_TOKEN:
 	# Create random JUPYTER_TOKEN for Jupyter running in Docker

@@ -1,6 +1,11 @@
 SHELL := /bin/bash
 
 docker-build-all:
+	# For now manually build wheel file for pynb-dag-runner library dependency
+	(cd pynb-dag-runner; \
+	    make docker-build-all build)
+
+	# Build docker images for mnist-demo-pipeline
 	(cd docker; make \
 	    build-base-env-docker-image \
 	    build-cicd-env-docker-image \

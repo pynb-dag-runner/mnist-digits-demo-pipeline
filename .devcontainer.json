@@ -1,6 +1,6 @@
 // See, https://code.visualstudio.com/docs/remote/containers
 {
-  "name": "pynb-dag-runner dev",
+  "name": "mnist-demo-pipeline dev",
   "dockerComposeFile": [
     ".devcontainer-docker-compose.yml"
   ],
