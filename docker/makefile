@@ -8,14 +8,14 @@ build-base-env-docker-image:
 	    --file Dockerfile.base \
 	    --build-arg HOST_UID=$$(id -u) \
 	    --build-arg HOST_GID="$$(id -g)" \
-	    --tag pynb-dag-runner-base \
+	    --tag mnist-demo-pipeline-base \
 	    .
 
 build-cicd-env-docker-image:
 	docker \
 	    build \
 	    --file Dockerfile.cicd \
-	    --tag pynb-dag-runner-cicd \
+	    --tag mnist-demo-pipeline-cicd \
 	    .
 
 JUPYTER_TOKEN:
@@ -27,5 +27,5 @@ build-dev-env-docker-image: JUPYTER_TOKEN
 	    build \
 	    --file Dockerfile.dev \
 	    --build-arg JUPYTER_TOKEN=$$(cat JUPYTER_TOKEN) \
-	    --tag pynb-dag-runner-dev \
+	    --tag mnist-demo-pipeline-dev \
 	    .
