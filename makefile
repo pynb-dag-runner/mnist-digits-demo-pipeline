@@ -49,27 +49,21 @@ write-vs-code-tasks-json:
 	    --workdir /home/host_user/workspace/.vscode/ \
 	    mnist-demo-pipeline-cicd \
 	    "( \
-			black write_tasks_json.py; \
-			mypy --ignore-missing-imports write_tasks_json.py; \
-			python3 write_tasks_json.py \
+	        mypy --ignore-missing-imports write_tasks_json.py; \
+	        black write_tasks_json.py; \
+	        python3 write_tasks_json.py \
 		)"
 
-
-### Outline for testing and running demo pipeline; Implementation TODO
-
 clean:
-	make COMMAND="(cd .; echo todo-clean)" docker-run-in-cicd
-
-build:
-	make COMMAND="(cd .; echo todo-build)" docker-run-in-cicd
+	make COMMAND="(cd common; make clean)" docker-run-in-cicd
 
 test:
-	# Run all tests for library
+	# Single command to run all tests
 	make COMMAND="( \
-	    cd .; \
-	    echo \
-	        todo \
-			test-pytest \
+	    cd common; \
+	    make install \
+	        test-pytest \
 	        test-mypy \
-	        test-black \
+	        test-black; \
+		make clean \
 	)" docker-run-in-cicd
