@@ -74,9 +74,10 @@ def make_notebook_task(
 print("---- Setting up tasks and task dependencies ----")
 
 task_ingest = make_notebook_task(notebook_path=Path("./notebooks/ingest.py"))
+task_eda = make_notebook_task(notebook_path=Path("./notebooks/eda.py"))
 
-tasks = [task_ingest]
-task_dependencies = TaskDependencies()
+tasks = [task_ingest, task_eda]
+task_dependencies = TaskDependencies(task_ingest >> task_eda)
 
 print("---- Running mnist-demo-pipeline ----")
 

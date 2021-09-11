@@ -1,1 +1,4 @@
 docker/JUPYTER_TOKEN
+pipeline-outputs
+
+.ipynb_checkpoints

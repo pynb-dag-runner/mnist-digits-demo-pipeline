@@ -11,7 +11,7 @@ test-mypy:
 	mypy --ignore-missing-imports .
 
 test-black:
-	black --check --diff .
+	black --check --diff --exclude /.ipynb_checkpoints/ .
 
 clean-pipeline-outputs:
 	# use with care
