@@ -13,8 +13,10 @@ test-mypy:
 test-black:
 	black --check --diff .
 
-clean:
-	(cd /pipeline-outputs; \
-	    rm -rf data-lake/* runlogs/*; \
-	    touch data-lake/.gitkeep runlogs/.gitkeep; \
-	)
+clean-pipeline-outputs:
+	# use with care
+	rm -rf /pipeline-outputs/data-lake/*
+	touch /pipeline-outputs/data-lake/.gitkeep
+
+	touch /pipeline-outputs/runlogs/.gitkeep;
+	rm -rf /pipeline-outputs/runlogs/*;
