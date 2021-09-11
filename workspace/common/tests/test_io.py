@@ -4,7 +4,13 @@ from pathlib import Path
 import numpy as np
 
 #
-from common.io import write_numpy, read_numpy
+from common.io import write_numpy, read_numpy, datalake_root
+
+
+def test_datalake_root():
+    P = {"data_lake_root": "/foo/bar"}
+
+    assert datalake_root(P) == Path("/foo/bar")
 
 
 def test_numpy_read_write(tmp_path: Path):

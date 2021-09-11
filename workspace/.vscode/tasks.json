@@ -62,6 +62,60 @@
                 "group": "terminal-group-id=mnist-demo-pipeline common"
             },
             "problemMatcher": []
+        },
+        {
+            "label": "mnist-demo-pipeline - watch and run all tasks",
+            "dependsOn": [
+                "(mnist-demo-pipeline: run pipeline)",
+                "(mnist-demo-pipeline: run static code analysis)",
+                "(mnist-demo-pipeline: check code is linted)"
+            ],
+            "problemMatcher": []
+        },
+        {
+            "label": "(mnist-demo-pipeline: run pipeline)",
+            "type": "shell",
+            "command": "(cd mnist-demo-pipeline; find . | grep \".py\" | entr make run)",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "new",
+                "group": "terminal-group-id=mnist-demo-pipeline"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "(mnist-demo-pipeline: run static code analysis)",
+            "type": "shell",
+            "command": "(cd mnist-demo-pipeline; find . | grep \".py\" | entr make test-mypy)",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "new",
+                "group": "terminal-group-id=mnist-demo-pipeline"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "(mnist-demo-pipeline: check code is linted)",
+            "type": "shell",
+            "command": "(cd mnist-demo-pipeline; find . | grep \".py\" | entr make test-black)",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "new",
+                "group": "terminal-group-id=mnist-demo-pipeline"
+            },
+            "problemMatcher": []
         }
     ]
 }

@@ -16,6 +16,15 @@ write_tasks_file_dict(
             "run static code analysis": "make test-mypy",
             "check code is linted": "make test-black",
         },
+    )
+    + make_component_tasks(
+        component_name="mnist-demo-pipeline",
+        component_relative_path="mnist-demo-pipeline",
+        task_commands={
+            "run pipeline": "make run",
+            "run static code analysis": "make test-mypy",
+            "check code is linted": "make test-black",
+        },
     ),
 )
 

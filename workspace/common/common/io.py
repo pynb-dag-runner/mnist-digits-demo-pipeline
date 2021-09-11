@@ -5,6 +5,10 @@ from pathlib import Path
 import numpy as np
 
 
+def datalake_root(P):
+    return Path(P["data_lake_root"])
+
+
 def write_numpy(path: Path, numpy_obj):
     """
     Serialize and write a numpy array to a local file

@@ -5,6 +5,7 @@ services:
     image: mnist-demo-pipeline-dev
     volumes:
     - ./workspace:/home/host_user/workspace
+    - ./pipeline-outputs:/pipeline-outputs
     ports:
     - "8888:8888"
     command:
