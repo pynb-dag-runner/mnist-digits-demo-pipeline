@@ -49,34 +49,35 @@ jobs:
         run: |
           make docker-build-all
 
+      # -- check and test common package used by multiple tasks in the pipeline --
+
       - name: "common: Run unit tests"
         shell: bash
         working-directory: ${{ github.workspace }}
         run: |
-          make \
-              COMMAND="(cd commmon; make test-pytest )" \
-              docker-run-in-cicd
+          make docker-run-in-cicd \
+            COMMAND="(cd commmon; make install test-pytest )"
 
       - name: "common: Run mypy type checks"
         shell: bash
         working-directory: ${{ github.workspace }}
         run: |
-          make \
-              COMMAND="(cd commmon; make test-mypy )" \
-              docker-run-in-cicd
+          make docker-run-in-cicd \
+            COMMAND="(cd commmon; make install test-mypy )"
 
       - name: "common: Check black formatting"
         shell: bash
         working-directory: ${{ github.workspace }}
         run: |
-          make \
-              COMMAND="(cd commmon; make test-black )" \
-              docker-run-in-cicd
+          make docker-run-in-cicd \
+            COMMAND="(cd commmon; make install test-black )"
 
-      #- name: "Store wheel-file as build artefact"
-      #  uses: actions/upload-artifact@v2
-      #  with:
-      #    name: pynb_dag_runner
-      #    path: ${{ github.workspace }}/workspace/pynb_dag_runner/dist/
-      #    if-no-files-found: error
-      #    retention-days: 10
+      # -- run pipeline (TODO) --
+
+      - name: "Store pipeline output files"
+        uses: actions/upload-artifact@v2
+        with:
+          name: mnist-digits-demo-pipeline
+          path: ${{ github.workspace }}/pipeline-outputs
+          if-no-files-found: error
+          retention-days: 10
