@@ -17,7 +17,7 @@ on:
 
 # GITHUB_TOKEN: add read access to repo (which is already public), but no other permissions
 permissions:
-  contents: read
+  contents: none
 
 jobs:
   run-all-tests:
