@@ -15,9 +15,18 @@ on:
 
   workflow_dispatch:
 
-# GITHUB_TOKEN: add read access to repo (which is already public), but no other permissions
+# Give GITHUB_TOKEN minimal permissions (ie., only metadata read-access). To
+# verify this, check the "Set up jobs" section in the Github actions log.
+#
+# See:
+# https://docs.github.com/en/actions/reference/authentication-in-a-workflow
+# https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository
+# https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#permissions
+#
+# and also links in:
+# https://github.blog/changelog/2021-04-20-github-actions-control-permissions-for-github_token/
 permissions:
-  contents: none
+  metadata: "none"
 
 jobs:
   run-all-tests:
