@@ -61,12 +61,20 @@ class GenLogger:
             )
         )
 
-    def log(self, key: str, value: Any):
+    def _log(self, key: str, value: Any):
         if not isinstance(key, str):
             raise ValueError(f"The key '{key}' should be a string")
-
-        self.info(f"Logging {key} = {value}")
         self.key_values[key] = value
+
+    def log_dict(self, kv_dict: Dict[str, Any]):
+        self.info(f"Logging:")
+        for key, value in kv_dict.items():
+            self._log(key, value)
+            self.info(f"- {key} = {value}")
+
+    def log(self, key: str, value: Any):
+        self.info(f"Logging {key} = {value}")
+        self._log(key, value)
 
     def log_image(self, imagename: str, fig):
         """

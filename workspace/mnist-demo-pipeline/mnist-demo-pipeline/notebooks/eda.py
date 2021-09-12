@@ -57,6 +57,10 @@ assert X.shape[0] == len(y) == y.shape[0]
 # each image is 8x8 pixels
 assert X.shape[1] == 8 * 8
 
+# %%
+logger.log("nr_digits", len(y))
+logger.log("pixels_per_digit", X.shape[1])
+
 
 # %% [markdown]
 # ## Check distribution of labels
@@ -98,7 +102,8 @@ assert set(y) == set(range(10))
 
 # %%
 digit_counts: Dict[int, int] = dict(collections.Counter(y))
-digit_counts
+
+logger.log_dict({f"nr_digits.{k}": v for k, v in digit_counts.items()})
 
 # %%
 fig = plot_dict_to_barplot(
@@ -126,7 +131,6 @@ assert set(X.reshape(-1)) == set(float(x) for x in range(17))
 
 # %%
 pixel_value_counts: Dict[int, int] = dict(collections.Counter(X.reshape(-1)))
-pixel_value_counts
 
 # %%
 fig = plot_dict_to_barplot(
@@ -143,8 +147,6 @@ logger.log_image("pixel_value_counts.png", fig)
 # - The pixel values in the images are encoded with numbers 0, .., 16.
 # - Pixel value 0 occur most frequently (background color).
 # - The second most frequent pixel value is 16.0 (digit draw color).
-
-# %%
 
 # %%
 logger.persist()
