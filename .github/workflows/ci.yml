@@ -56,21 +56,21 @@ jobs:
         working-directory: ${{ github.workspace }}
         run: |
           make docker-run-in-cicd \
-            COMMAND="(cd commmon; make install test-pytest )"
+            COMMAND="(cd common; make install test-pytest )"
 
       - name: "common: Run mypy type checks"
         shell: bash
         working-directory: ${{ github.workspace }}
         run: |
           make docker-run-in-cicd \
-            COMMAND="(cd commmon; make install test-mypy )"
+            COMMAND="(cd common; make install test-mypy )"
 
       - name: "common: Check black formatting"
         shell: bash
         working-directory: ${{ github.workspace }}
         run: |
           make docker-run-in-cicd \
-            COMMAND="(cd commmon; make install test-black )"
+            COMMAND="(cd common; make install test-black )"
 
       # -- run pipeline (TODO) --
 
