@@ -1,4 +1,4 @@
-from typing import Any, List
+from typing import Any, Dict, List
 from pathlib import Path
 import datetime
 
@@ -26,6 +26,7 @@ class GenLogger:
     def __init__(self, log_directory: Path):
         self.log_directory: Path = log_directory
         self.images: List[str] = []
+        self.key_values: Dict[str, Any] = {}
 
         self.last_ts: datetime.datetime = datetime.datetime.now()
         self.info("GenLogger initialized")
@@ -60,6 +61,13 @@ class GenLogger:
             )
         )
 
+    def log(self, key: str, value: Any):
+        if not isinstance(key, str):
+            raise ValueError(f"The key '{key}' should be a string")
+
+        self.info(f"Logging {key} = {value}")
+        self.key_values[key] = value
+
     def log_image(self, imagename: str, fig):
         """
         Save a matplotlib figure to the log-directory
@@ -82,5 +90,5 @@ class GenLogger:
     def persist(self):
         write_json(
             self.log_directory / "genlogger.json",
-            {"images": self.images, "key-values": {}},
+            {"images": self.images, "key-values": self.key_values},
         )
