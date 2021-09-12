@@ -56,17 +56,19 @@ write-vs-code-tasks-json:
 		)"
 
 clean:
-	make COMMAND="(cd common; make clean)" docker-run-in-cicd
+	make docker-run-in-cicd \
+	    COMMAND="(cd common; make clean)"
 
 test-all:
-	# Single command to run all tests
-	make COMMAND="( \
-	    cd common; \
-	    make install; \
-	    make test-pytest test-mypy test-black; \
-	    make clean; \
-	    ) && ( \
-	    cd mnist-demo-pipeline; \
-	    make test-mypy test-black; \
-	    make run; \
-	)" docker-run-in-cicd
+	# Single command to run all tests and the demo pipeline
+	make docker-run-in-cicd \
+	    COMMAND="( \
+	        cd common; \
+	        make install; \
+	        make test-pytest test-mypy test-black; \
+	        make clean; \
+	        ) && ( \
+	        cd mnist-demo-pipeline; \
+	        make test-mypy test-black; \
+	        make run; \
+	    )"

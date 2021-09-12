@@ -36,7 +36,7 @@ jobs:
       - name: "Determine run-environment"
         shell: bash
         run: |
-          echo "RUN_ENVIRONMENT=ci" >> $GITHUB_ENV
+            echo "RUN_ENVIRONMENT=ci" >> $GITHUB_ENV
 
       - uses: actions/checkout@v2
         with:
@@ -47,7 +47,7 @@ jobs:
         shell: bash
         working-directory: ${{ github.workspace }}
         run: |
-          make docker-build-all
+            make docker-build-all
 
       # -- check and test common package used by multiple tasks in the pipeline --
 
@@ -55,47 +55,53 @@ jobs:
         shell: bash
         working-directory: ${{ github.workspace }}
         run: |
-          make docker-run-in-cicd \
-            COMMAND="(cd common; make install test-pytest )"
+            make docker-run-in-cicd \
+                COMMAND="(cd common; make install test-pytest )"
 
       - name: "common: Check mypy type hints"
         shell: bash
         working-directory: ${{ github.workspace }}
         run: |
-          make docker-run-in-cicd \
-            COMMAND="(cd common; make install test-mypy )"
+            make docker-run-in-cicd \
+                COMMAND="(cd common; make install test-mypy )"
 
       - name: "common: Check black formatting"
         shell: bash
         working-directory: ${{ github.workspace }}
         run: |
-          make docker-run-in-cicd \
-            COMMAND="(cd common; make install test-black )"
+            make docker-run-in-cicd \
+                COMMAND="(cd common; make install test-black )"
 
-      # -- run pipeline --
+      # -- test and run pipeline --
 
       - name: "mnist-digits-demo-pipeline: Check mypy type hints"
         shell: bash
         working-directory: ${{ github.workspace }}
         run: |
-          make docker-run-in-cicd \
-            COMMAND="(cd mnist-demo-pipeline; make test-mypy )"
+            make docker-run-in-cicd \
+                COMMAND="\
+                    (cd common; make install) && \
+                    (cd mnist-demo-pipeline; make test-mypy)"
 
       - name: "mnist-digits-demo-pipeline: Check black formatting"
         shell: bash
         working-directory: ${{ github.workspace }}
         run: |
-          make docker-run-in-cicd \
-            COMMAND="(cd mnist-demo-pipeline; make test-black )"
+            make docker-run-in-cicd \
+                COMMAND="\
+                    (cd common; make install) && \
+                    (cd mnist-demo-pipeline; make test-black)"
 
       - name: "mnist-digits-demo-pipeline: Run pipeline"
         shell: bash
         working-directory: ${{ github.workspace }}
         run: |
-          make docker-run-in-cicd \
-            COMMAND="(cd mnist-demo-pipeline; make run)"
+            make docker-run-in-cicd \
+                COMMAND="\
+                    (cd common; make install) && \
+                    (cd mnist-demo-pipeline; make run)"
 
-      # -- Store pipeline outputs --
+      # -- store pipeline outputs --
 
       # Upload action uses a separate token (and not GITHUB_TOKEN), see
       # https://github.com/actions/upload-artifact/issues/197
