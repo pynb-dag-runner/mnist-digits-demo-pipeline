@@ -26,7 +26,7 @@ on:
 # and also links in:
 # https://github.blog/changelog/2021-04-20-github-actions-control-permissions-for-github_token/
 permissions:
-  metadata: "none"
+  contents: "none"  # project repo:s are public
 
 jobs:
   run-all-tests:
