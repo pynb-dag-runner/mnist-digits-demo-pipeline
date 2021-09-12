@@ -1,6 +1,8 @@
-from typing import Any
+from typing import Any, List
 from pathlib import Path
 import datetime
+
+from pynb_dag_runner.helpers import write_json
 
 
 class GenLogger:
@@ -22,7 +24,9 @@ class GenLogger:
     """
 
     def __init__(self, log_directory: Path):
-        self.log_directory = log_directory
+        self.log_directory: Path = log_directory
+        self.images: List[str] = []
+
         self.last_ts: datetime.datetime = datetime.datetime.now()
         self.info("GenLogger initialized")
 
@@ -56,5 +60,27 @@ class GenLogger:
             )
         )
 
+    def log_image(self, imagename: str, fig):
+        """
+        Save a matplotlib figure to the log-directory
+        """
+        if not imagename.endswith(".png"):
+            raise ValueError("Filename should end with .png")
+
+        if imagename.startswith("/") or ".." in imagename:
+            raise ValueError("Invalid filename")
+
+        outpath = self.log_directory / "images" / imagename
+        outpath.parent.mkdir(exist_ok=True, parents=True)
+
+        # plots are transparent by default
+        fig.savefig(outpath, facecolor="white", transparent=False)
+
+        self.images.append(imagename)
+        self.info(f"Logged matplotlib fig {imagename}.")
+
     def persist(self):
-        pass
+        write_json(
+            self.log_directory / "genlogger.json",
+            {"images": self.images, "key-values": {}},
+        )
