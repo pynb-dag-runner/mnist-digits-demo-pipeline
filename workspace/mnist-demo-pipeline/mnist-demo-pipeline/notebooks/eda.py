@@ -6,8 +6,11 @@
 
 # %%
 # ----------------- Parameters for interactive development --------------
+import uuid
+
 P = {
     "data_lake_root": "/pipeline-outputs/data-lake",
+    "run.run_directory": f"/pipeline-outputs/runlogs/{uuid.uuid4()}",
 }
 # %% tags=["parameters"]
 # - During automated runs parameters will be injected in the below cell -
@@ -28,7 +31,11 @@ import collections
 import matplotlib.pyplot as plt
 
 #
-from common.io import datalake_root, read_numpy
+from common.io import datalake_root, runlog_root, read_numpy
+from common.genlogger import GenLogger
+
+# %%
+logger = GenLogger(runlog_root(P))
 
 # %%
 X = read_numpy(datalake_root(P) / "raw" / "digits.numpy")
@@ -49,6 +56,10 @@ assert X.shape[0] == len(y) == y.shape[0]
 
 # each image is 8x8 pixels
 assert X.shape[1] == 8 * 8
+
+# %%
+logger.log("nr_digits", len(y))
+logger.log("pixels_per_digit", X.shape[1])
 
 
 # %% [markdown]
@@ -82,6 +93,8 @@ def plot_dict_to_barplot(
 
     fig.tight_layout()
 
+    return fig
+
 
 # %%
 # all labels in y are in set 0, 1, ..., 8, 9 (possible digits)
@@ -89,15 +102,19 @@ assert set(y) == set(range(10))
 
 # %%
 digit_counts: Dict[int, int] = dict(collections.Counter(y))
-digit_counts
+
+logger.log_dict({f"nr_digits.{k}": v for k, v in digit_counts.items()})
 
 # %%
-plot_dict_to_barplot(
+fig = plot_dict_to_barplot(
     digit_counts,
     title=f"Number of samples per digit (n={len(y)})",
     x_label="Digit",
     y_label="Nr of samples",
 )
+
+# %%
+logger.log_image("samples_per_digit.png", fig)
 
 # %% [markdown]
 # - All digits 0, 1, ..., 8, 9 are (approximatively) equally represented in the data set
@@ -114,19 +131,24 @@ assert set(X.reshape(-1)) == set(float(x) for x in range(17))
 
 # %%
 pixel_value_counts: Dict[int, int] = dict(collections.Counter(X.reshape(-1)))
-pixel_value_counts
 
 # %%
-plot_dict_to_barplot(
+fig = plot_dict_to_barplot(
     pixel_value_counts,
     title=f"Distribution of pixel values over all digit images (n={len(X.reshape(-1))})",
     x_label="Pixel value",
     y_label="Counts",
 )
 
+# %%
+logger.log_image("pixel_value_counts.png", fig)
+
 # %% [markdown]
 # - The pixel values in the images are encoded with numbers 0, .., 16.
 # - Pixel value 0 occur most frequently (background color).
 # - The second most frequent pixel value is 16.0 (digit draw color).
+
+# %%
+logger.persist()
 
 # %%
