@@ -33,6 +33,7 @@ docker-run-in-cicd:
 	docker run --rm \
 	    --network none \
 	    --volume $$(pwd)/workspace:/home/host_user/workspace \
+	    --volume $$(pwd)/pipeline-outputs:/pipeline-outputs \
 	    --workdir /home/host_user/workspace/ \
 	    mnist-demo-pipeline-cicd \
 	    "$(COMMAND)"
@@ -55,15 +56,19 @@ write-vs-code-tasks-json:
 		)"
 
 clean:
-	make COMMAND="(cd common; make clean)" docker-run-in-cicd
+	make docker-run-in-cicd \
+	    COMMAND="(cd common; make clean)"
 
-test:
-	# Single command to run all tests
-	make COMMAND="( \
-	    cd common; \
-	    make install \
-	        test-pytest \
-	        test-mypy \
-	        test-black; \
-		make clean \
-	)" docker-run-in-cicd
+test-all:
+	# Single command to run all tests and the demo pipeline
+	make docker-run-in-cicd \
+	    COMMAND="( \
+	        cd common; \
+	        make install; \
+	        make test-pytest test-mypy test-black; \
+	        make clean; \
+	        ) && ( \
+	        cd mnist-demo-pipeline; \
+	        make test-mypy test-black; \
+	        make run; \
+	    )"
