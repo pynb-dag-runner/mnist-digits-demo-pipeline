@@ -1,4 +1,4 @@
-version: "3"
+version: "3.6"
 
 services:
   dev-environment:
@@ -8,6 +8,8 @@ services:
     - ./pipeline-outputs:/pipeline-outputs
     ports:
     - "8888:8888"
+    environment:
+      RUN_ENVIRONMENT: "dev"
     command:
     - |
       cd /home/host_user/workspace/
