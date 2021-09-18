@@ -26,7 +26,7 @@ import time, random
 
 if P["run.retry_nr"] < {"dev": 2, "ci": 10}[P["run_environment"]]:  # type: ignore
     # fail ingestion on first tries
-    if random.random() < 0.5:
+    if random.random() < 0.3:
         print("Hanging notebook to check that notebook is canceled by timeout ...")
         time.sleep(1e6)
     else:
