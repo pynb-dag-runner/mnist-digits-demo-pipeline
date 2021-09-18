@@ -1,10 +1,12 @@
 SHELL := /bin/bash
 
 run:
+	echo "environment variable RUN_ENVIRONMENT: ${RUN_ENVIRONMENT}"
 	(cd mnist-demo-pipeline; \
 	    python3 -u driver.py \
 	        --data_lake_root /pipeline-outputs/data-lake \
-	        --runlogs_root /pipeline-outputs/runlogs/$$(date +"%Y-%m-%d_%H-%M-%S") \
+	        --runlogs_root /pipeline-outputs/runlogs \
+	        --run_environment ${RUN_ENVIRONMENT} \
 	)
 
 test-mypy:

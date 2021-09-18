@@ -1,5 +1,8 @@
 SHELL := /bin/bash
 
+# override when invoking make, eg "make RUN_ENVIRONMENT=ci ..."
+RUN_ENVIRONMENT ?= "dev"
+
 docker-build-all:
 	# For now manually build wheel file for pynb-dag-runner library dependency
 	(cd pynb-dag-runner; \
@@ -32,6 +35,7 @@ dev-down:
 docker-run-in-cicd:
 	docker run --rm \
 	    --network none \
+	    --env RUN_ENVIRONMENT=$(RUN_ENVIRONMENT) \
 	    --volume $$(pwd)/workspace:/home/host_user/workspace \
 	    --volume $$(pwd)/pipeline-outputs:/pipeline-outputs \
 	    --workdir /home/host_user/workspace/ \
@@ -53,19 +57,23 @@ write-vs-code-tasks-json:
 	        mypy --ignore-missing-imports write_tasks_json.py; \
 	        black write_tasks_json.py; \
 	        python3 write_tasks_json.py \
-		)"
+	    )"
 
 clean:
+	# The below commands do not depend on RUN_ENVIRONMENT. But, the command
+	# is most useful in dev-setup.
 	make docker-run-in-cicd \
-	    COMMAND="(cd common; make clean)"
+	    COMMAND=" \
+	        (cd common; make clean; ) && \
+	        (cd mnist-demo-pipeline; make clean-pipeline-outputs)"
 
 test-all:
 	# Single command to run all tests and the demo pipeline
 	make docker-run-in-cicd \
+	    RUN_ENVIRONMENT=$(RUN_ENVIRONMENT) \
 	    COMMAND="( \
 	        cd common; \
 	        make install; \
-	        make test-pytest test-mypy test-black; \
 	        make clean; \
 	        ) && ( \
 	        cd mnist-demo-pipeline; \
