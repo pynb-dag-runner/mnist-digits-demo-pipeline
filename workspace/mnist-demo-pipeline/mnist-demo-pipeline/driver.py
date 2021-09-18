@@ -47,6 +47,7 @@ start_time: str = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 COMMON_PARAMETERS = {
     # data lake root is pipeline-scoped parameter
     "parameters.data_lake_root": args.data_lake_root,
+    "parameters.run_environment": args.run_environment,
 }
 
 
@@ -92,7 +93,9 @@ def make_notebook_task(
 
 print("---- Setting up tasks and task dependencies ----")
 
-task_ingest = make_notebook_task(notebook_path=Path("./notebooks/ingest.py"))
+task_ingest = make_notebook_task(
+    notebook_path=Path("./notebooks/ingest.py"), timeout_s=3, n_max_retries=10
+)
 task_eda = make_notebook_task(notebook_path=Path("./notebooks/eda.py"))
 
 tasks = [task_ingest, task_eda]

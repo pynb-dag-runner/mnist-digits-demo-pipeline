@@ -7,7 +7,9 @@
 # %%
 # ----------------- Parameters for interactive development --------------
 P = {
+    "run_environment": "dev",
     "data_lake_root": "/pipeline-outputs/data-lake",
+    "run.retry_nr": 1,
 }
 # %% tags=["parameters"]
 # - During automated runs parameters will be injected in the below cell -
@@ -15,6 +17,21 @@ P = {
 # -----------------------------------------------------------------------
 # %% [markdown]
 # ---
+
+# %% [markdown]
+# ### Simulate different types of failures (for testing timeout and retry logic)
+
+# %%
+import time, random
+
+if P["run.retry_nr"] < {"dev": 2, "ci": 10}[P["run_environment"]]:  # type: ignore
+    # fail ingestion on first tries
+    if random.random() < 0.5:
+        print("Hanging notebook to check that notebook is canceled by timeout ...")
+        time.sleep(1e6)
+    else:
+        # notebook should be retried on failure
+        raise Exception("Simulated exception failure from ingestion step notebook!")
 
 # %% [markdown]
 # ### Notebook code
