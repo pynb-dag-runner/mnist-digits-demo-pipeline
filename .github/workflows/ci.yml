@@ -106,6 +106,18 @@ jobs:
                     (cd common; make install) && \
                     (cd mnist-demo-pipeline; make run)"
 
+      # -- Draw graphs --
+
+      - name: "Summarize pipeline outcome: Draw Gantt chart of task runtimes"
+        shell: bash
+        working-directory: ${{ github.workspace }}
+        run: |
+            export RUNLOGS_ROOT="$(pwd)/pipeline-outputs/runlogs"
+
+            cd pynb-dag-runner/tools/draw-runlog-visuals
+            make draw-runlog-visuals \
+                RUNLOGS_ROOT=$RUNLOGS_ROOT
+
       # -- store pipeline outputs --
 
       # Upload action uses a separate token (and not GITHUB_TOKEN), see
