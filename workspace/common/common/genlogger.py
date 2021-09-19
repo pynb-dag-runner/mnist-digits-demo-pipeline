@@ -96,6 +96,8 @@ class GenLogger:
         self.info(f"Logged matplotlib fig {imagename}.")
 
     def persist(self):
+        self.log_directory.mkdir(exist_ok=True, parents=True)
+
         write_json(
             self.log_directory / "genlogger.json",
             {"images": self.images, "key-values": self.key_values},
