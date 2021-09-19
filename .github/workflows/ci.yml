@@ -126,6 +126,8 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: mnist-digits-demo-pipeline-outputs
-          path: ${{ github.workspace }}/pipeline-outputs
+          path: |
+              ${{ github.workspace }}/pipeline-outputs
+              !${{ github.workspace }}/pipeline-outputs/(runlogs|data-lake)/.gitkeep
           if-no-files-found: error
           retention-days: 10
