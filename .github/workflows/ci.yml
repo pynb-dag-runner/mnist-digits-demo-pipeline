@@ -106,17 +106,17 @@ jobs:
                     (cd common; make install) && \
                     (cd mnist-demo-pipeline; make run)"
 
-      # -- Draw graphs --
-
-      - name: "Summarize pipeline outcome: Draw Gantt chart of task runtimes"
+      - name: "mnist-digits-demo-pipeline: Render Gantt and dependency graphs"
         shell: bash
         working-directory: ${{ github.workspace }}
         run: |
             export RUNLOGS_ROOT="$(pwd)/pipeline-outputs/runlogs"
+            export PNG_OUTPUT_DIRECTORY="$(pwd)/pipeline-outputs"
 
             cd pynb-dag-runner/tools/draw-runlog-visuals
             make draw-runlog-visuals \
-                RUNLOGS_ROOT=$RUNLOGS_ROOT
+                RUNLOGS_ROOT="$RUNLOGS_ROOT" \
+                PNG_OUTPUT_DIRECTORY="$PNG_OUTPUT_DIRECTORY"
 
       # -- store pipeline outputs --
 
