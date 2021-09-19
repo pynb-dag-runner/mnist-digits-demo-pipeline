@@ -11,7 +11,7 @@ import uuid
 P = {
     "data_lake_root": "/pipeline-outputs/data-lake",
     "run.run_directory": f"/pipeline-outputs/runlogs/{uuid.uuid4()}",
-    "task.train_test_ratio": 0.7
+    "task.train_test_ratio": 0.7,
 }
 # %% tags=["parameters"]
 # - During automated runs parameters will be injected in the below cell -
