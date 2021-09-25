@@ -67,7 +67,7 @@ clean:
 	        (cd common; make clean; ) && \
 	        (cd mnist-demo-pipeline; make clean-pipeline-outputs)"
 
-test-all:
+test-and-run-pipeline:
 	# Single command to run all tests and the demo pipeline
 	make docker-run-in-cicd \
 	    RUN_ENVIRONMENT=$(RUN_ENVIRONMENT) \
