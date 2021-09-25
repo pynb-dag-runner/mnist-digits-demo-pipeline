@@ -97,9 +97,15 @@ task_ingest = make_notebook_task(
     notebook_path=Path("./notebooks/ingest.py"), timeout_s=4, n_max_retries=12
 )
 task_eda = make_notebook_task(notebook_path=Path("./notebooks/eda.py"))
+task_split_train_test = make_notebook_task(
+    notebook_path=Path("./notebooks/split-train-test.py"),
+    parameters={"parameters.task.train_test_ratio": 0.7},
+)
 
-tasks = [task_ingest, task_eda]
-task_dependencies = TaskDependencies(task_ingest >> task_eda)
+tasks = [task_ingest, task_eda, task_split_train_test]
+task_dependencies = TaskDependencies(
+    task_ingest >> task_eda, task_eda >> task_split_train_test
+)
 
 print("---- Running mnist-demo-pipeline ----")
 

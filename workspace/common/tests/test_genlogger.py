@@ -8,6 +8,16 @@ from pynb_dag_runner.helpers import read_json
 from common.genlogger import GenLogger
 
 
+def test_genlogger_should_create_log_directory_if_it_does_not_exist(tmp_path: Path):
+    log_directory = tmp_path / "foo" / "bar" / "baz"
+    logger = GenLogger(log_directory=log_directory)
+    logger.persist()
+    assert read_json(log_directory / "genlogger.json") == {
+        "images": [],
+        "key-values": {},
+    }
+
+
 def test_genlogger_info_messages_and_empty_output_file(tmp_path: Path):
     logger = GenLogger(log_directory=tmp_path)
 
