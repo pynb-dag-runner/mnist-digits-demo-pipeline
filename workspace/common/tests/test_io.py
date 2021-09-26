@@ -99,7 +99,7 @@ def test_onnx_io_for_a_svc_model(tmp_path: Path):
         ]
         return onnx_inference_session
 
-    # Step 4: predict output of persisted-and-loaded ONNX model on train data
+    # Step 4: get output predictions of persisted-and-loaded ONNX model on train data
     onnx_pred_labels, onnx_pred_probabilities_map = get_onnx_inference_session(
         model
     ).run(
@@ -109,12 +109,12 @@ def test_onnx_io_for_a_svc_model(tmp_path: Path):
 
     # Step 5: assert that the two models gives same results
 
-    # a) assert hard labels are equal
+    # a) assert that predicted labels are equal
     assert sk_pred_labels.shape == onnx_pred_labels.shape == y.shape
     assert (sk_pred_labels == y).all()
     assert (onnx_pred_labels == y).all()
 
-    # b) assert predicted probabilities are equal
+    # b) assert that predicted probabilities are equal
     onnx_pred_probabilities = np.array(
         [[entry[k] for k in range(3)] for entry in onnx_pred_probabilities_map]
     )
