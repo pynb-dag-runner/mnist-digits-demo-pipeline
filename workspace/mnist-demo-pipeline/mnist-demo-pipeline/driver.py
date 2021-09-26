@@ -2,6 +2,9 @@ from pathlib import Path
 import uuid, datetime
 
 #
+import numpy as np
+
+#
 from pynb_dag_runner.wrappers.runlog import Runlog
 
 from pynb_dag_runner.tasks.tasks import JupytextNotebookTask, get_task_dependencies
@@ -102,9 +105,23 @@ task_split_train_test = make_notebook_task(
     parameters={"parameters.task.train_test_ratio": 0.7},
 )
 
-tasks = [task_ingest, task_eda, task_split_train_test]
+task_trainers = [
+    make_notebook_task(
+        notebook_path=Path("./notebooks/train-model.py"),
+        parameters={"parameters.task.train_size": ratio},
+    )
+    for ratio in {
+        "ci": np.linspace(0.3, 1, num=10),
+        "dev": np.linspace(0.3, 0.5, num=4),
+    }[args.run_environment]
+]
+
+
+tasks = [task_ingest, task_eda, task_split_train_test] + task_trainers
 task_dependencies = TaskDependencies(
-    task_ingest >> task_eda, task_eda >> task_split_train_test
+    task_ingest >> task_eda,
+    task_ingest >> task_split_train_test,
+    *[task_split_train_test >> task_trainer for task_trainer in task_trainers],
 )
 
 print("---- Running mnist-demo-pipeline ----")
