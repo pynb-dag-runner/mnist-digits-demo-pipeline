@@ -3,11 +3,10 @@
 #
 # The purpose of this notebook is:
 #
-# - Load all training data (images and labels)
-# - Limit this to only use ratio `task.train_size` (in range 0..1) of images. This
-#   ratio is provided as a run parameter.
-# - Train a support vector machine using sklearn
-# - Persist the trained model using the ONNX format
+# - Load all training data (images and labels).
+# - Limit train data to only `task.nr_train_images` number of images.
+# - Train a support vector machine model using sklearn.
+# - Persist the trained model using the ONNX format.
 #
 
 # %% [markdown]
@@ -20,7 +19,7 @@ import uuid
 P = {
     "data_lake_root": "/pipeline-outputs/data-lake",
     "run.run_directory": f"/pipeline-outputs/runlogs/{uuid.uuid4()}",
-    "task.train_size": 0.60,
+    "task.nr_train_images": 600,
 }
 # %% tags=["parameters"]
 # - During automated runs parameters will be injected in the below cell -
@@ -52,28 +51,28 @@ def load_and_limit_train_data(P):
     X_train_all = read_numpy(datalake_root(P) / "train-data" / "digits.numpy")
     y_train_all = read_numpy(datalake_root(P) / "train-data" / "labels.numpy")
 
-    assert isinstance(P["task.train_size"], float)
-    assert 0 < P["task.train_size"] <= 1
+    assert isinstance(P["task.nr_train_images"], int)
+    assert 0 < P["task.nr_train_images"] <= len(y_train_all)
 
-    X_train, _, y_train, _ = train_test_split(
-        X_train_all,
-        y_train_all,
-        train_size=P["task.train_size"],
-        test_size=None,
-        stratify=y_train_all,
-        shuffle=True,
-        random_state=123,
-    )
+    if P["task.nr_train_images"] == len(y_train_all):
+        # train_test_split fails in this case
+        X_train, y_train = X_train_all, y_train_all
+    else:
+        X_train, _, y_train, _ = train_test_split(
+            X_train_all,
+            y_train_all,
+            train_size=P["task.nr_train_images"],
+            test_size=None,
+            stratify=y_train_all,
+            shuffle=True,
+            random_state=123,
+        )
 
-    print(len(y_train_all))
     assert X_train.shape == (len(y_train), 8 * 8)
     return X_train, y_train
 
 
 X_train, y_train = load_and_limit_train_data(P)
-
-# %%
-logger.log("nr_train_samples", len(y_train))
 
 # %% [markdown]
 # ## Train model using sklearn
@@ -115,7 +114,10 @@ model_onnx = convert_sklearn(
     model, initial_types=[("float_input_8x8_image", FloatTensorType([None, 8 * 8]))]
 )
 write_onnx(
-    datalake_root(P) / "models" / f"train_samples={len(y_train)}" / "model.onnx",
+    datalake_root(P)
+    / "models"
+    / f"nr_train_images={P['task.nr_train_images']}"
+    / "model.onnx",
     model_onnx,
 )
 

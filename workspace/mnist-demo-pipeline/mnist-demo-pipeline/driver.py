@@ -108,11 +108,11 @@ task_split_train_test = make_notebook_task(
 task_trainers = [
     make_notebook_task(
         notebook_path=Path("./notebooks/train-model.py"),
-        parameters={"parameters.task.train_size": ratio},
+        parameters={"parameters.task.nr_train_images": nr_train_images},
     )
-    for ratio in {
-        "ci": np.linspace(0.3, 1, num=10),
-        "dev": np.linspace(0.3, 0.5, num=4),
+    for nr_train_images in {
+        "ci": list(range(600, 1201, 100)) + [1257],
+        "dev": [400, 500, 600],
     }[args.run_environment]
 ]
 
