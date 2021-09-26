@@ -3,6 +3,14 @@ from pathlib import Path
 
 #
 import numpy as np
+import onnx
+
+from onnxruntime.capi.onnxruntime_inference_collection import InferenceSession
+import onnxruntime as rt
+
+# See: https://github.com/microsoft/onnxruntime/blob/master/docs/Privacy.md
+rt.disable_telemetry_events()
+rt.set_seed(0)
 
 
 def datalake_root(P):
@@ -35,3 +43,39 @@ def read_numpy(path: Path):
 
     with open(path, "rb") as f:
         return np.load(f)
+
+
+# ---- onnx helpers for persisting and loading ml models, see https://onnx.ai ----
+
+
+def write_onnx(path: Path, model_onnx: onnx.onnx_ml_pb2.ModelProto):
+    os.makedirs(path.parent, exist_ok=True)
+
+    path.write_bytes(model_onnx.SerializeToString())
+
+
+def read_onnx(path: Path) -> InferenceSession:
+    assert path.is_file()
+
+    rt.set_seed(0)
+    return rt.InferenceSession(path.read_bytes())
+
+
+def get_onnx_inputs(onnx_inference_session: InferenceSession):
+    """
+    Return a list describing the input parameters for an ONNX model
+    """
+    return [
+        {"name": input.name, "shape": input.shape, "type": input.type}
+        for input in onnx_inference_session.get_inputs()
+    ]
+
+
+def get_onnx_outputs(onnx_inference_session: InferenceSession):
+    """
+    Return a list describing the outputs from an ONNX model
+    """
+    return [
+        {"name": output.name, "shape": output.shape, "type": output.type}
+        for output in onnx_inference_session.get_outputs()
+    ]
