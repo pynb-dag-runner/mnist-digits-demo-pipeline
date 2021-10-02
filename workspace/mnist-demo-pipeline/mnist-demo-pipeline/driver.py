@@ -1,5 +1,6 @@
 from pathlib import Path
 import uuid, datetime
+from typing import List
 
 #
 import numpy as np
@@ -105,23 +106,35 @@ task_split_train_test = make_notebook_task(
     parameters={"parameters.task.train_test_ratio": 0.7},
 )
 
+nr_train_digits: List[int] = {
+    "ci": list(range(600, 1201, 100)) + [1257],
+    "dev": [400, 500, 600],
+}[args.run_environment]
+
 task_trainers = [
     make_notebook_task(
         notebook_path=Path("./notebooks/train-model.py"),
-        parameters={"parameters.task.nr_train_images": nr_train_images},
+        parameters={"parameters.task.nr_train_images": k},
     )
-    for nr_train_images in {
-        "ci": list(range(600, 1201, 100)) + [1257],
-        "dev": [400, 500, 600],
-    }[args.run_environment]
+    for k in nr_train_digits
 ]
 
+task_benchmarks = [
+    make_notebook_task(
+        notebook_path=Path("./notebooks/benchmark-model.py"),
+        parameters={"parameters.task.nr_train_images": k},
+    )
+    for k in nr_train_digits
+]
 
-tasks = [task_ingest, task_eda, task_split_train_test] + task_trainers
+###
+
+tasks = [task_ingest, task_eda, task_split_train_test] + task_trainers + task_benchmarks
 task_dependencies = TaskDependencies(
     task_ingest >> task_eda,
     task_ingest >> task_split_train_test,
     *[task_split_train_test >> task_trainer for task_trainer in task_trainers],
+    *[task_t >> task_b for task_t, task_b in zip(task_trainers, task_benchmarks)],
 )
 
 print("---- Running mnist-demo-pipeline ----")
