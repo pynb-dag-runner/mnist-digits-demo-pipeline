@@ -4,10 +4,9 @@
 # The purpose of this notebook is:
 #
 # - Load all training data (images and labels).
-# - Limit train data to only `task.nr_train_images` number of images.
+# - Limit number of train images to `task.nr_train_images` (value provided as run parameter).
 # - Train a support vector machine model using sklearn.
 # - Persist the trained model using the ONNX format.
-#
 
 # %% [markdown]
 # ### Determine run parameters
@@ -41,7 +40,7 @@ logger = GenLogger(runlog_root(P))
 
 
 # %% [markdown]
-# ## Load all limit train data
+# ## Load and limit train data
 
 # %%
 def load_and_limit_train_data(P):
@@ -75,16 +74,19 @@ def load_and_limit_train_data(P):
 X_train, y_train = load_and_limit_train_data(P)
 
 # %% [markdown]
-# ## Train model using sklearn
+# ## Train support vector classifier model
 #
-# Below we assume that the hyperparameters are known.
+# Below we assume that the hyperparameter $C$ is known.
 #
-# However, these should ideally be found by a hyperparameter search. That could be
+# However, this should ideally be found by a hyperparameter search. That could be
 # done in parallel on the Ray cluster, but this needs some more work. Ie., to use
 # multiple cores in the notebook, those cores should be reserved when starting the
 # notebook task (TODO).
 #
 # - https://docs.ray.io/en/latest/tune/key-concepts.html
+#
+# Note: cv-scores would need to be computed here, since they depend on the train data.
+# After this notebook only the onnx-model is available.
 
 # %%
 from sklearn.svm import SVC
@@ -93,10 +95,6 @@ from sklearn.svm import SVC
 model = SVC(C=0.001, kernel="linear", probability=True)
 
 model.fit(X_train, y_train)
-
-# %%
-# Note: cv-scores would need to be computed here, since they depend on the train data.
-# After this notebook only the onnx-model is available
 
 # %% [markdown]
 # ## Persist model
@@ -110,6 +108,7 @@ from common.io import datalake_root, write_onnx
 
 # %%
 # convert sklearn model into onnx and persist to data lake
+
 model_onnx = convert_sklearn(
     model, initial_types=[("float_input_8x8_image", FloatTensorType([None, 8 * 8]))]
 )
