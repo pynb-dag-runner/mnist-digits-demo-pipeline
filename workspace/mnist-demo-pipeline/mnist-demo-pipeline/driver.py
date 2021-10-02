@@ -98,7 +98,7 @@ def make_notebook_task(
 print("---- Setting up tasks and task dependencies ----")
 
 task_ingest = make_notebook_task(
-    notebook_path=Path("./notebooks/ingest.py"), timeout_s=4, n_max_retries=12
+    notebook_path=Path("./notebooks/ingest.py"), timeout_s=8, n_max_retries=12
 )
 task_eda = make_notebook_task(notebook_path=Path("./notebooks/eda.py"))
 task_split_train_test = make_notebook_task(
