@@ -16,6 +16,9 @@ def chunkify(arr, chunk_size: int):
        https://numpy.org/doc/stable/reference/generated/numpy.array_split.html
 
     """
+    if not chunk_size > 0:
+        raise Exception("chunk_size should be positive integer")
+
     next_chunk, rest = arr[:chunk_size], arr[chunk_size:]
 
     if len(rest) > 0:
