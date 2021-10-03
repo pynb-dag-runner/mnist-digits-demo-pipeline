@@ -1,4 +1,4 @@
-from common.utils import chunkify
+from common.utils import chunkify, make_panel_image
 
 #
 import numpy as np
@@ -39,3 +39,81 @@ def test_chunkify_numpy():
         assert_list_of_arrs_eq(list(chunkify(xs, chunk_size=N - 1)), xs_chunks)
 
     assert_list_of_arrs_eq(list(chunkify(xs, chunk_size=N + 1)), [xs])
+
+
+def test_make_panel():
+    def get_2x3(start_int: int):
+        return (np.arange(6) + start_int).reshape(2, 3)
+
+    N_images = 5
+    xs = np.array([get_2x3(k) for k in range(N_images)])
+    assert xs.shape == (N_images, 2, 3)
+
+    def get_panel_arr(images_per_row: int, pad_width: int, background_fill: int):
+        return (
+            make_panel_image(
+                xs,
+                pad_width=pad_width,
+                background_fill=background_fill,
+                images_per_row=images_per_row,
+            )
+            .astype("int")
+            .tolist()
+        )
+
+    for b in range(3):
+        assert get_panel_arr(images_per_row=2, pad_width=0, background_fill=b) == [
+            [0, 1, 2, 1, 2, 3],
+            [3, 4, 5, 4, 5, 6],
+            [2, 3, 4, 3, 4, 5],
+            [5, 6, 7, 6, 7, 8],
+            [4, 5, 6, b, b, b],
+            [7, 8, 9, b, b, b],
+        ]
+
+        assert get_panel_arr(images_per_row=3, pad_width=1, background_fill=b) == [
+            [b, b, b, b, b, b, b, b, b, b, b, b, b, b, b],
+            [b, 0, 1, 2, b, b, 1, 2, 3, b, b, 2, 3, 4, b],
+            [b, 3, 4, 5, b, b, 4, 5, 6, b, b, 5, 6, 7, b],
+            [b, b, b, b, b, b, b, b, b, b, b, b, b, b, b],
+            [b, b, b, b, b, b, b, b, b, b, b, b, b, b, b],
+            [b, 3, 4, 5, b, b, 4, 5, 6, b, b, b, b, b, b],
+            [b, 6, 7, 8, b, b, 7, 8, 9, b, b, b, b, b, b],
+            [b, b, b, b, b, b, b, b, b, b, b, b, b, b, b],
+        ]
+
+        assert get_panel_arr(images_per_row=2, pad_width=1, background_fill=b) == [
+            [b, b, b, b, b, b, b, b, b, b],
+            [b, 0, 1, 2, b, b, 1, 2, 3, b],
+            [b, 3, 4, 5, b, b, 4, 5, 6, b],
+            [b, b, b, b, b, b, b, b, b, b],
+            [b, b, b, b, b, b, b, b, b, b],
+            [b, 2, 3, 4, b, b, 3, 4, 5, b],
+            [b, 5, 6, 7, b, b, 6, 7, 8, b],
+            [b, b, b, b, b, b, b, b, b, b],
+            [b, b, b, b, b, b, b, b, b, b],
+            [b, 4, 5, 6, b, b, b, b, b, b],
+            [b, 7, 8, 9, b, b, b, b, b, b],
+            [b, b, b, b, b, b, b, b, b, b],
+        ]
+
+        assert get_panel_arr(images_per_row=2, pad_width=2, background_fill=b) == [
+            [b, b, b, b, b, b, b, b, b, b, b, b, b, b],
+            [b, b, b, b, b, b, b, b, b, b, b, b, b, b],
+            [b, b, 0, 1, 2, b, b, b, b, 1, 2, 3, b, b],
+            [b, b, 3, 4, 5, b, b, b, b, 4, 5, 6, b, b],
+            [b, b, b, b, b, b, b, b, b, b, b, b, b, b],
+            [b, b, b, b, b, b, b, b, b, b, b, b, b, b],
+            [b, b, b, b, b, b, b, b, b, b, b, b, b, b],
+            [b, b, b, b, b, b, b, b, b, b, b, b, b, b],
+            [b, b, 2, 3, 4, b, b, b, b, 3, 4, 5, b, b],
+            [b, b, 5, 6, 7, b, b, b, b, 6, 7, 8, b, b],
+            [b, b, b, b, b, b, b, b, b, b, b, b, b, b],
+            [b, b, b, b, b, b, b, b, b, b, b, b, b, b],
+            [b, b, b, b, b, b, b, b, b, b, b, b, b, b],
+            [b, b, b, b, b, b, b, b, b, b, b, b, b, b],
+            [b, b, 4, 5, 6, b, b, b, b, b, b, b, b, b],
+            [b, b, 7, 8, 9, b, b, b, b, b, b, b, b, b],
+            [b, b, b, b, b, b, b, b, b, b, b, b, b, b],
+            [b, b, b, b, b, b, b, b, b, b, b, b, b, b],
+        ]
