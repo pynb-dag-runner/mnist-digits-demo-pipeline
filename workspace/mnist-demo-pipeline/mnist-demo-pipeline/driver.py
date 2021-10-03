@@ -51,7 +51,9 @@ start_time: str = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 COMMON_PARAMETERS = {
     # data lake root is pipeline-scoped parameter
     "parameters.data_lake_root": args.data_lake_root,
+    "parameters.runlogs_root": args.runlogs_root,
     "parameters.run_environment": args.run_environment,
+    "parameters.pipeline_run_id": str(uuid.uuid4()),
 }
 
 
@@ -127,14 +129,23 @@ task_benchmarks = [
     for k in nr_train_digits
 ]
 
+task_summary = make_notebook_task(notebook_path=Path("./notebooks/summary.py"))
+
+
 ###
 
-tasks = [task_ingest, task_eda, task_split_train_test] + task_trainers + task_benchmarks
+tasks = (
+    [task_ingest, task_eda, task_split_train_test]
+    + task_trainers
+    + task_benchmarks
+    + [task_summary]
+)
 task_dependencies = TaskDependencies(
     task_ingest >> task_eda,
     task_ingest >> task_split_train_test,
     *[task_split_train_test >> task_trainer for task_trainer in task_trainers],
     *[task_t >> task_b for task_t, task_b in zip(task_trainers, task_benchmarks)],
+    *[task_benchmark >> task_summary for task_benchmark in task_benchmarks],
 )
 
 print("---- Running mnist-demo-pipeline ----")
