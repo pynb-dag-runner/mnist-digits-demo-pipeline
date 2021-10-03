@@ -111,12 +111,13 @@ jobs:
         working-directory: ${{ github.workspace }}
         run: |
             export RUNLOGS_ROOT="$(pwd)/pipeline-outputs/runlogs"
-            export PNG_OUTPUT_DIRECTORY="$(pwd)/pipeline-outputs"
+            export IMG_OUTPUT_DIRECTORY="$(pwd)/pipeline-outputs"
 
             cd pynb-dag-runner/tools/draw-runlog-visuals
-            make draw-runlog-visuals \
-                RUNLOGS_ROOT="$RUNLOGS_ROOT" \
-                PNG_OUTPUT_DIRECTORY="$PNG_OUTPUT_DIRECTORY"
+            make draw-runlog-visuals IMG_OUTPUT_FORMAT="png"
+
+            # TODO: Generated task-dependencies svg is broken
+            # make draw-runlog-visuals IMG_OUTPUT_FORMAT="svg"
 
       # -- store pipeline outputs --
 
