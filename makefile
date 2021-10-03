@@ -67,16 +67,32 @@ clean:
 	        (cd common; make clean; ) && \
 	        (cd mnist-demo-pipeline; make clean-pipeline-outputs)"
 
+draw-runlog-visuals:
+	# Rendering images should only be run when RUN_ENVIRONMENT="ci"
+	# (rending will not work in dev setup due to different directory layout)
+	#
+	# Only rendering png for now, generated svg seem broken(?)
+	if [ "$(RUN_ENVIRONMENT)" = "ci" ]; then ( \
+	    export RUNLOGS_ROOT="$$(pwd)/pipeline-outputs/runlogs"; \
+	    export IMG_OUTPUT_DIRECTORY="$$(pwd)/pipeline-outputs"; \
+	    cd pynb-dag-runner/tools/draw-runlog-visuals; \
+	    make draw-runlog-visuals IMG_OUTPUT_FORMAT="png"; \
+	); fi
+
 test-and-run-pipeline:
 	# Single command to run all tests and the demo pipeline
+	make clean
+
 	make docker-run-in-cicd \
 	    RUN_ENVIRONMENT=$(RUN_ENVIRONMENT) \
 	    COMMAND="( \
 	        cd common; \
 	        make install; \
 	        make clean; \
-	        ) && ( \
+	    ) && ( \
 	        cd mnist-demo-pipeline; \
 	        make test-mypy test-black; \
 	        make run; \
 	    )"
+
+	make draw-runlog-visuals RUN_ENVIRONMENT=$(RUN_ENVIRONMENT)
