@@ -69,9 +69,10 @@ clean:
 
 draw-runlog-visuals:
 	# Rendering images should only be run when RUN_ENVIRONMENT="ci"
-	# (rending will not work in dev setup due to different directory layout)
+	# (rending will not work in RUN_ENVIRONMENT="ci" due to different
+	# directory layout)
 	#
-	# Only rendering png for now, generated svg seem broken(?)
+	# Only rendering png for now, generated task-dependencies.svg is broken
 	if [ "$(RUN_ENVIRONMENT)" = "ci" ]; then ( \
 	    export RUNLOGS_ROOT="$$(pwd)/pipeline-outputs/runlogs"; \
 	    export IMG_OUTPUT_DIRECTORY="$$(pwd)/pipeline-outputs"; \

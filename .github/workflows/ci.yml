@@ -115,7 +115,9 @@ jobs:
 
             cd pynb-dag-runner/tools/draw-runlog-visuals
             make draw-runlog-visuals IMG_OUTPUT_FORMAT="png"
-            make draw-runlog-visuals IMG_OUTPUT_FORMAT="svg"
+
+            # TODO: Generated task-dependencies svg is broken
+            # make draw-runlog-visuals IMG_OUTPUT_FORMAT="svg"
 
       # -- store pipeline outputs --
 
