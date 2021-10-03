@@ -109,7 +109,7 @@ def plot_classifier_performance_summary(df_data):
     ax1.plot(
         df_data["nr_train_images"], df_data["runtime_ms"], marker="o", linestyle="--"
     )
-    ax1.set_title(f"Total training time [ms]", fontsize=17)
+    ax1.set_title(f"Total training wall time [ms]", fontsize=17)
     ax1.set_xlabel("Number of images in training set", fontsize=14)
     ax1.set_ylabel("ms", fontsize=14)
 
