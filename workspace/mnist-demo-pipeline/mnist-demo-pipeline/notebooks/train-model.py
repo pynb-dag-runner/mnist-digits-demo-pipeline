@@ -97,6 +97,30 @@ model = SVC(C=0.001, kernel="linear", probability=True)
 model.fit(X_train, y_train)
 
 # %% [markdown]
+# ### Q: Can the labels returned by `predict(..)` be computed from probabilities returned by the `predict_prob`-method?
+
+# %%
+import numpy as np
+
+y_train_labels = model.predict(X_train)
+y_train_probabilities = model.predict_proba(X_train)
+assert y_train_probabilities.shape == (len(y_train), 10)
+
+y_train_max_prob_labels = np.argmax(y_train_probabilities, axis=1)
+assert y_train_labels.shape == y_train_max_prob_labels.shape == y_train.shape
+
+# If the predicted labels would coincide with the labels that have
+# maximum probability, the below number would be zero
+logger.log("nr_max_prob_neq_label", int(sum(y_train_max_prob_labels != y_train_labels)))
+
+# %% [markdown]
+# The explanation is (likely) explained in the SVC source, see
+# [here](https://github.com/scikit-learn/scikit-learn/blob/main/sklearn/svm/_base.py).
+# Namely, the outputs from `predict(..)` and `predict_proba(..)` may not in some
+# cases be compatible since the latter is computed using cross-validation while
+# the former is not. Thus, the above number need not be zero.
+
+# %% [markdown]
 # ## Persist model
 
 # %%
