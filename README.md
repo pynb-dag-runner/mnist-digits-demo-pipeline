@@ -19,7 +19,7 @@ This repository uses Github Actions automation to run the demo pipeline as part 
 
 This means:
 - The entire pipeline is run for all commits to pull request to this repository, and to commits to `development` branch.
-- From the build artefacts one can inspect the pipeline's outputs for each pull request and commit.
+- From the build artefacts one can inspect the pipeline's outputs (and, in particular, model performances) for each pull request and commit.
 - The pipeline runs using (free) compute resources provided by Github. No other infrastructure is needed.
 
 The below diagram shows a Gantt chart with runtimes of individual pipeline tasks.
@@ -27,8 +27,8 @@ The below diagram shows a Gantt chart with runtimes of individual pipeline tasks
 ![task-dependencies.png](./assets/runtimes-gantt-chart.png)
 
 Of note:
-- Tasks are run in parallel using all available cores using the Ray framework. On Github hosted runners there are two vCPUs.
-- The first ingestion task is retried until it succeeds (and to test error handling in pynb-dag-runner, the ingestion step is programmed to randomly fail or hang). This explains the failures (in red) in the above Gantt chart.
+- Tasks are run in parallel using all available cores using the Ray framework. On (free) Github hosted runners there are two vCPUs.
+- The first ingestion task is retried until it succeeds (and to test error handling, the ingestion step is implemented to randomly fail or hang). This explains the failures (in red) in the above Gantt chart.
 
 Both of the above diagrams are included of all build artefact zip files for CI-runs of this repo.
 
@@ -62,7 +62,7 @@ The list of development tasks in VS Code, are defined [here](workspace/.vscode/t
 
 Please note that this is experimental and 🚧🚧🚧🚧🚧.
 
-A motivation for this work is to make it easier to set up and work together (on pipelines). If you would like to discuss an idea/question, please raise an [issue](https://github.com/pynb-dag-runner/mnist-digits-demo-pipeline/issues) or contact me via email.
+A motivation for this work is to make it easier to set up and work together (on pipelines). If you would like to discuss an idea or question, please raise an [issue](https://github.com/pynb-dag-runner/mnist-digits-demo-pipeline/issues) or contact me via email.
 
 ## License
 
