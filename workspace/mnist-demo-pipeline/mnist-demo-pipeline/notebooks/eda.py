@@ -148,6 +148,34 @@ logger.log_image("pixel_value_counts.png", fig)
 # - Pixel value 0 occur most frequently (background color).
 # - The second most frequent pixel value is 16.0 (digit draw color).
 
+# %% [markdown]
+# ## Plot individual digit images
+
+# %%
+from common.utils import chunkify, make_panel_image
+
+# %%
+for digit in range(10):
+    X_digit = X[y == digit].reshape(-1, 8, 8)
+
+    fig, ax = plt.subplots(nrows=1, ncols=1, figsize=(18, 30))
+
+    ax.set_title(f"\nDigits {digit} (n={len(X_digit)}) \n", fontsize=24)
+    ax.axis("off")
+
+    ax.imshow(
+        make_panel_image(X_digit, pad_width=2, background_fill=6, images_per_row=26),
+        cmap=plt.cm.gray_r,
+    )
+
+    fig.tight_layout()
+    fig.show()
+
+    logger.log_image(f"digit-{digit}-images.png", fig)
+
+# %%
+###
+
 # %%
 logger.persist()
 
