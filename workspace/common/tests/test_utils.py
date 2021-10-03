@@ -41,7 +41,7 @@ def test_chunkify_numpy():
     assert_list_of_arrs_eq(list(chunkify(xs, chunk_size=N + 1)), [xs])
 
 
-def test_make_panel():
+def test_make_panel_image():
     def get_2x3(start_int: int):
         return (np.arange(6) + start_int).reshape(2, 3)
 
