@@ -66,4 +66,4 @@ A motivation for this work is to make it easier to set up and work together (on 
 
 ## License
 
-(c) Matias Dahl 2021, MIT, see [LICENSE.md](./LICENSE.md).
+(c) Matias Dahl 2021-2022, MIT, see [LICENSE.md](./LICENSE.md).
