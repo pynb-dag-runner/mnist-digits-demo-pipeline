@@ -151,7 +151,7 @@ for s in rec.spans.exception_events():
 print("---- Writing spans ----")
 
 print(" - Total number of spans recorded   :", len(rec.spans))
-span_path = make_runlogs_root() / "spans.json"
+span_path = make_runlogs_root() / "opentelemetry-spans.json"
 print(" - Output filename                  :", str(span_path))
 write_json(span_path, list(rec.spans))
 
