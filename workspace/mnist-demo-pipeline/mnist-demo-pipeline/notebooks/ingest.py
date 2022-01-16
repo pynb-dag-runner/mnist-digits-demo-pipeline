@@ -7,9 +7,9 @@
 # %%
 # ----------------- Parameters for interactive development --------------
 P = {
-    "run_environment": "dev",
-    "data_lake_root": "/pipeline-outputs/data-lake",
-    "run.retry_nr": 1,
+    "flow.run_environment": "dev",
+    "flow.data_lake_root": "/pipeline-outputs/data-lake",
+    "run.retry_nr": "1",
 }
 # %% tags=["parameters"]
 # - During automated runs parameters will be injected in the below cell -
@@ -24,14 +24,21 @@ P = {
 # %%
 import time, random
 
-if P["run.retry_nr"] < {"dev": 2, "ci": 10}[P["run_environment"]]:  # type: ignore
-    # fail ingestion on first tries
-    if random.random() < 0.3:
-        print("Hanging notebook to check that notebook is canceled by timeout ...")
+
+def maybe_crash(retry_nr: int, run_environment: str):
+    if retry_nr == 2 and run_environment == "ci":
         time.sleep(1e6)
-    else:
-        # notebook should be retried on failure
-        raise Exception("Simulated exception failure from ingestion step notebook!")
+
+    max_retry_nr: int = 3 if run_environment == "dev" else 10
+
+    if retry_nr < max_retry_nr:
+        if random.random() < 0.1:
+            time.sleep(1e6)
+        else:
+            raise Exception("Simulated exception failure from ingestion step notebook!")
+
+
+maybe_crash(retry_nr=int(P["run.retry_nr"]), run_environment=P["flow.run_environment"])
 
 # %% [markdown]
 # ### Notebook code
