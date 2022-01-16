@@ -102,13 +102,13 @@ task_ingest = make_notebook_task(nb_name="ingest.py", timeout_s=10, max_nr_retri
 task_eda = make_notebook_task(nb_name="eda.py")
 run_in_sequence(task_ingest, task_eda)
 
-# --- tasks defined using old API ---
+task_split_train_test = make_notebook_task(
+    nb_name="split-train-test.py",
+    task_parameters={"task.train_test_ratio": 0.7},
+)
+run_in_sequence(task_ingest, task_split_train_test)
 
-# task_split_train_test = make_notebook_task(
-#     notebook_path=Path("./notebooks/split-train-test.py"),
-#     parameters={"parameters.task.train_test_ratio": 0.7},
-# )
-# run_in_sequence(task_ingest, task_split_train_test)
+# --- tasks defined using old API ---
 
 # nr_train_digits: List[int] = {
 #     "ci": list(range(600, 1201, 100)) + [1257],
@@ -138,7 +138,7 @@ run_in_sequence(task_ingest, task_eda)
 print("---- Running mnist-demo-pipeline ----")
 
 with SpanRecorder() as rec:
-    _ = start_and_await_tasks([task_ingest], [task_eda], arg={})
+    _ = start_and_await_tasks([task_ingest], [task_eda, task_split_train_test], arg={})
 
 ray.shutdown()
 

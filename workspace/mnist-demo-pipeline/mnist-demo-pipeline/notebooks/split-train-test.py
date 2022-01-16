@@ -9,8 +9,8 @@
 import uuid
 
 P = {
-    "data_lake_root": "/pipeline-outputs/data-lake",
-    "run.run_directory": f"/pipeline-outputs/runlogs/{uuid.uuid4()}",
+    "flow.data_lake_root": "/pipeline-outputs/data-lake",
+    "flow.runlogs_root": f"/pipeline-outputs/runlogs/{uuid.uuid4()}",
     "task.train_test_ratio": 0.7,
 }
 # %% tags=["parameters"]
@@ -25,11 +25,11 @@ P = {
 
 
 # %%
-from common.io import datalake_root, runlog_root, read_numpy, write_numpy
+from common.io import datalake_root, read_numpy, write_numpy
 from common.genlogger import GenLogger
 
 # %%
-logger = GenLogger(runlog_root(P))
+logger = GenLogger(datalake_root(P))
 
 # %% [markdown]
 # ## Load and split digits data
