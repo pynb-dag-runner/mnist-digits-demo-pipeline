@@ -9,7 +9,7 @@
 import uuid
 
 P = {
-    "data_lake_root": "/pipeline-outputs/data-lake",
+    "flow.data_lake_root": "/pipeline-outputs/data-lake",
     "run.run_directory": f"/pipeline-outputs/runlogs/{uuid.uuid4()}",
 }
 # %% tags=["parameters"]
@@ -35,7 +35,7 @@ from common.io import datalake_root, runlog_root, read_numpy
 from common.genlogger import GenLogger
 
 # %%
-logger = GenLogger(runlog_root(P))
+logger = GenLogger(datalake_root(P))
 
 # %%
 X = read_numpy(datalake_root(P) / "raw" / "digits.numpy")
