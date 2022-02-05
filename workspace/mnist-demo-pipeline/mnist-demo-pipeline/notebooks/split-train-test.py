@@ -26,10 +26,9 @@ P = {
 
 # %%
 from common.io import datalake_root, read_numpy, write_numpy
-from common.genlogger import GenLogger
+from pynb_dag_runner.tasks.task_opentelemetry_logging import PydarLogger
 
-# %%
-logger = GenLogger(datalake_root(P))
+logger = PydarLogger(P)
 
 # %% [markdown]
 # ## Load and split digits data
@@ -62,8 +61,8 @@ assert X_test.shape[0] == len(y_test)
 assert len(y) == len(y_train) + len(y_test)
 
 # %%
-logger.log("nr_digits_train", len(y_train))
-logger.log("nr_digits_test", len(y_test))
+logger.log_int("nr_digits_train", len(y_train))
+logger.log_int("nr_digits_test", len(y_test))
 
 # %% [markdown]
 # ### Persist training and test data sets to separate files
@@ -75,8 +74,5 @@ write_numpy(datalake_root(P) / "train-data" / "labels.numpy", y_train)
 #
 write_numpy(datalake_root(P) / "test-data" / "digits.numpy", X_test)
 write_numpy(datalake_root(P) / "test-data" / "labels.numpy", y_test)
-
-# %%
-logger.persist()
 
 # %%

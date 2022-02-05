@@ -16,6 +16,7 @@ build-cicd-env-docker-image:
 	# wheel-file built into pynb-dag-runner submodule.)
 	docker \
 	    build \
+	    --no-cache \
 	    --file Dockerfile.cicd \
 	    --tag mnist-demo-pipeline-cicd \
 	    ..
