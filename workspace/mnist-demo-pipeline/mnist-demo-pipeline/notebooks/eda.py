@@ -30,12 +30,18 @@ from typing import Dict, Tuple
 import collections
 import matplotlib.pyplot as plt
 
+
 #
-from common.io import datalake_root, runlog_root, read_numpy
+from pynb_dag_runner.tasks.task_opentelemetry_logging import PydarLogger
+
+#
+from common.io import datalake_root, read_numpy
 from common.genlogger import GenLogger
 
+
 # %%
-logger = GenLogger(datalake_root(P))
+old_logger = GenLogger(datalake_root(P))
+logger = PydarLogger(P)
 
 # %%
 X = read_numpy(datalake_root(P) / "raw" / "digits.numpy")
@@ -58,8 +64,8 @@ assert X.shape[0] == len(y) == y.shape[0]
 assert X.shape[1] == 8 * 8
 
 # %%
-logger.log("nr_digits", len(y))
-logger.log("pixels_per_digit", X.shape[1])
+logger.log_int("nr_digits", len(y))
+logger.log_int("pixels_per_digit", int(X.shape[1]))
 
 
 # %% [markdown]
@@ -103,7 +109,7 @@ assert set(y) == set(range(10))
 # %%
 digit_counts: Dict[int, int] = dict(collections.Counter(y))
 
-logger.log_dict({f"nr_digits.{k}": v for k, v in digit_counts.items()})
+logger.log_value("nr_digits", {str(k): v for k, v in digit_counts.items()})
 
 # %%
 fig = plot_dict_to_barplot(
@@ -114,7 +120,7 @@ fig = plot_dict_to_barplot(
 )
 
 # %%
-logger.log_image("samples_per_digit.png", fig)
+old_logger.log_image("samples_per_digit.png", fig)
 
 # %% [markdown]
 # - All digits 0, 1, ..., 8, 9 are (approximatively) equally represented in the data set
@@ -141,7 +147,7 @@ fig = plot_dict_to_barplot(
 )
 
 # %%
-logger.log_image("pixel_value_counts.png", fig)
+old_logger.log_image("pixel_value_counts.png", fig)
 
 # %% [markdown]
 # - The pixel values in the images are encoded with numbers 0, .., 16.
@@ -171,12 +177,9 @@ for digit in range(10):
     fig.tight_layout()
     fig.show()
 
-    logger.log_image(f"digit-{digit}-images.png", fig)
+    old_logger.log_image(f"digit-{digit}-images.png", fig)
 
 # %%
 ###
-
-# %%
-logger.persist()
 
 # %%
