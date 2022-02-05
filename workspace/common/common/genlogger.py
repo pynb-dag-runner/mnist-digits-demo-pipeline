@@ -7,6 +7,8 @@ from pynb_dag_runner.helpers import write_json
 
 class GenLogger:
     """
+    --- to be deprecated ---
+
     Generic logger for:
 
      - info-messages        (not persisted, but displayed with timing)
@@ -24,10 +26,6 @@ class GenLogger:
     """
 
     def __init__(self, log_directory: Path):
-        self.log_directory: Path = log_directory
-        self.images: List[str] = []
-        self.key_values: Dict[str, Any] = {}
-
         self.last_ts: datetime.datetime = datetime.datetime.now()
         self.info("GenLogger initialized")
 
@@ -61,47 +59,34 @@ class GenLogger:
             )
         )
 
-    def _log(self, key: str, value: Any):
-        if not isinstance(key, str):
-            raise ValueError(f"The key '{key}' should be a string")
-        self.key_values[key] = value
-
-    def log_dict(self, kv_dict: Dict[str, Any]):
-        self.info(f"Logging:")
-        for key, value in kv_dict.items():
-            self._log(key, value)
-            self.info(f"- {key} = {value}")
-
-    def log(self, key: str, value: Any):
-        self.info(f"Logging {key} = {value}")
-        self._log(key, value)
-
     def log_image(self, imagename: str, fig):
         """
         Save a matplotlib figure to the log-directory
         """
-        if not imagename.endswith(".png"):
-            raise ValueError("Filename should end with .png")
+        pass
+        # if not imagename.endswith(".png"):
+        #     raise ValueError("Filename should end with .png")
 
-        if imagename.startswith("/") or ".." in imagename:
-            raise ValueError("Invalid filename")
+        # if imagename.startswith("/") or ".." in imagename:
+        #     raise ValueError("Invalid filename")
 
-        outpath = self.log_directory / "images" / imagename
-        outpath.parent.mkdir(exist_ok=True, parents=True)
+        # outpath = self.log_directory / "images" / imagename
+        # outpath.parent.mkdir(exist_ok=True, parents=True)
 
-        # plots are transparent by default
-        fig.savefig(outpath, facecolor="white", transparent=False)
+        # # plots are transparent by default
+        # fig.savefig(outpath, facecolor="white", transparent=False)
 
-        self.images.append(imagename)
-        self.info(f"Logged matplotlib fig {imagename}.")
+        # self.images.append(imagename)
+        # self.info(f"Logged matplotlib fig {imagename}.")
+
+    def _log(self, key: str, value: Any):
+        pass
+
+    def log_dict(self, kv_dict: Dict[str, Any]):
+        pass
+
+    def log(self, key: str, value: Any):
+        pass
 
     def persist(self):
-        # --- temp disable, stuff should be logged to opentelemetry ---
-
-        # self.log_directory.mkdir(exist_ok=True, parents=True)
-
-        # write_json(
-        #     self.log_directory / "genlogger.json",
-        #     {"images": self.images, "key-values": self.key_values},
-        # )
         pass

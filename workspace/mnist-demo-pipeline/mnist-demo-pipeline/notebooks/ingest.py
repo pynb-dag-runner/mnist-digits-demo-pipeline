@@ -18,8 +18,14 @@ P = {
 # %% [markdown]
 # ---
 
+
 # %% [markdown]
 # ### Simulate different types of failures (for testing timeout and retry logic)
+
+# %%
+from pynb_dag_runner.tasks.task_opentelemetry_logging import PydarLogger
+
+logger = PydarLogger(P)
 
 # %%
 import time, random
@@ -58,6 +64,9 @@ y = digits["target"]
 
 
 # %%
+logger.log_value("data_shape", list(X.shape))
+logger.log_value("target_shape", list(y.shape))
+
 X.shape, y.shape
 
 # %%
