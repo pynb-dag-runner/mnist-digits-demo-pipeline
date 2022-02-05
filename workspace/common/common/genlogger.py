@@ -63,20 +63,21 @@ class GenLogger:
         """
         Save a matplotlib figure to the log-directory
         """
-        if not imagename.endswith(".png"):
-            raise ValueError("Filename should end with .png")
+        pass
+        # if not imagename.endswith(".png"):
+        #     raise ValueError("Filename should end with .png")
 
-        if imagename.startswith("/") or ".." in imagename:
-            raise ValueError("Invalid filename")
+        # if imagename.startswith("/") or ".." in imagename:
+        #     raise ValueError("Invalid filename")
 
-        outpath = self.log_directory / "images" / imagename
-        outpath.parent.mkdir(exist_ok=True, parents=True)
+        # outpath = self.log_directory / "images" / imagename
+        # outpath.parent.mkdir(exist_ok=True, parents=True)
 
-        # plots are transparent by default
-        fig.savefig(outpath, facecolor="white", transparent=False)
+        # # plots are transparent by default
+        # fig.savefig(outpath, facecolor="white", transparent=False)
 
-        self.images.append(imagename)
-        self.info(f"Logged matplotlib fig {imagename}.")
+        # self.images.append(imagename)
+        # self.info(f"Logged matplotlib fig {imagename}.")
 
     def _log(self, key: str, value: Any):
         pass
