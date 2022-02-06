@@ -9,8 +9,6 @@
 
 # %%
 # ----------------- Parameters for interactive development --------------
-import uuid
-
 P = {
     "data_lake_root": "/pipeline-outputs/data-lake",
     "task.nr_train_images": 600,

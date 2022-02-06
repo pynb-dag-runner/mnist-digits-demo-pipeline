@@ -44,7 +44,9 @@ def maybe_crash(retry_nr: int, run_environment: str):
             raise Exception("Simulated exception failure from ingestion step notebook!")
 
 
-maybe_crash(retry_nr=int(P["run.retry_nr"]), run_environment=P["flow.run_environment"])
+maybe_crash(
+    retry_nr=int(P["run.retry_nr"]), run_environment=P["pipeline.run_environment"]
+)
 
 # %% [markdown]
 # ### Notebook code
