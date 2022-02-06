@@ -14,11 +14,7 @@ rt.set_seed(0)
 
 
 def datalake_root(P):
-    return Path(P["flow.data_lake_root"])
-
-
-def runlog_root(P):
-    return Path(P["run.run_directory"])
+    return Path(P["pipeline.data_lake_root"])
 
 
 def write_numpy(path: Path, numpy_obj):

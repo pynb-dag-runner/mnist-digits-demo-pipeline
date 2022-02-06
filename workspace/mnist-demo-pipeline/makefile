@@ -5,7 +5,7 @@ run:
 	(cd mnist-demo-pipeline; \
 	    python3 -u driver.py \
 	        --data_lake_root /pipeline-outputs/data-lake \
-	        --runlogs_root /pipeline-outputs/runlogs \
+	        --otel_spans_outputfile /pipeline-outputs/opentelemetry-spans.json \
 	        --run_environment ${RUN_ENVIRONMENT} \
 	)
 
@@ -17,8 +17,5 @@ test-black:
 
 clean-pipeline-outputs:
 	# use with care
-	rm -rf /pipeline-outputs/data-lake/*
-	touch /pipeline-outputs/data-lake/.gitkeep
-
-	touch /pipeline-outputs/runlogs/.gitkeep;
-	rm -rf /pipeline-outputs/runlogs/*;
+	rm -rf /pipeline-outputs/*
+	touch /pipeline-outputs/.gitkeep

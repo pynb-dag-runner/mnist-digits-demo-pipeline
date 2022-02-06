@@ -7,8 +7,8 @@
 # %%
 # ----------------- Parameters for interactive development --------------
 P = {
-    "flow.run_environment": "dev",
-    "flow.data_lake_root": "/pipeline-outputs/data-lake",
+    "pipeline.run_environment": "dev",
+    "pipeline.data_lake_root": "/pipeline-outputs/data-lake",
     "run.retry_nr": "1",
 }
 # %% tags=["parameters"]

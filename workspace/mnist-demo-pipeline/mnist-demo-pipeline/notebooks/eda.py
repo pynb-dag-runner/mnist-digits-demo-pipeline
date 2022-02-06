@@ -6,11 +6,8 @@
 
 # %%
 # ----------------- Parameters for interactive development --------------
-import uuid
-
 P = {
-    "flow.data_lake_root": "/pipeline-outputs/data-lake",
-    "run.run_directory": f"/pipeline-outputs/runlogs/{uuid.uuid4()}",
+    "pipeline.data_lake_root": "/pipeline-outputs/data-lake",
 }
 # %% tags=["parameters"]
 # - During automated runs parameters will be injected in the below cell -
@@ -40,7 +37,7 @@ from common.genlogger import GenLogger
 
 
 # %%
-old_logger = GenLogger(datalake_root(P))
+old_logger = GenLogger(None)
 logger = PydarLogger(P)
 
 # %%
@@ -109,7 +106,7 @@ assert set(y) == set(range(10))
 # %%
 digit_counts: Dict[int, int] = dict(collections.Counter(y))
 
-logger.log_value("nr_digits", {str(k): v for k, v in digit_counts.items()})
+logger.log_value("counts_per_digit", {str(k): v for k, v in digit_counts.items()})
 
 # %%
 fig = plot_dict_to_barplot(

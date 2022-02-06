@@ -6,11 +6,8 @@
 
 # %%
 # ----------------- Parameters for interactive development --------------
-import uuid
-
 P = {
-    "flow.data_lake_root": "/pipeline-outputs/data-lake",
-    "flow.runlogs_root": f"/pipeline-outputs/runlogs/{uuid.uuid4()}",
+    "pipeline.data_lake_root": "/pipeline-outputs/data-lake",
     "task.train_test_ratio": 0.7,
 }
 # %% tags=["parameters"]
