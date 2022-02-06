@@ -13,7 +13,6 @@ import uuid
 
 P = {
     "data_lake_root": "/pipeline-outputs/data-lake",
-    "run.run_directory": f"/pipeline-outputs/runlogs/{uuid.uuid4()}",
     "task.nr_train_images": 600,
 }
 # %% tags=["parameters"]
@@ -35,11 +34,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 #
-from common.io import datalake_root, runlog_root
+from common.io import datalake_root
 from common.genlogger import GenLogger
 
 # %%
-logger = GenLogger(runlog_root(P))
+logger = GenLogger(None)
 
 # %% [markdown]
 # ## Load persisted onnx-model and evaluation data
@@ -206,8 +205,4 @@ assert roc_auc_macro == metrics.roc_auc_score(
 
 # %%
 # ---
-
-# %%
-logger.persist()
-
 # %%

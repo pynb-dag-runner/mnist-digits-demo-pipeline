@@ -6,8 +6,6 @@
 
 # %%
 # ----------------- Parameters for interactive development --------------
-import uuid
-
 P = {
     "pipeline.data_lake_root": "/pipeline-outputs/data-lake",
     "task.train_test_ratio": 0.7,

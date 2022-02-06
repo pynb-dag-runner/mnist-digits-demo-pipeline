@@ -17,11 +17,8 @@
 
 # %%
 # ----------------- Parameters for interactive development --------------
-import uuid
-
 P = {
     "pipeline.data_lake_root": "/pipeline-outputs/data-lake",
-    "run.run_directory": f"/pipeline-outputs/runlogs/{uuid.uuid4()}",
 }
 # %% tags=["parameters"]
 # - During automated runs parameters will be injected in the below cell -
@@ -46,11 +43,10 @@ import matplotlib.pyplot as plt
 from pynb_dag_runner.helpers import read_json
 
 #
-from common.io import runlog_root
 from common.genlogger import GenLogger
 
 # %%
-logger = GenLogger(runlog_root(P))
+logger = GenLogger(None)
 
 
 # %%
@@ -126,6 +122,3 @@ logger.log_image("auc-roc-model-performances.png", fig)
 
 # %%
 ###
-
-# %%
-logger.persist()

@@ -13,11 +13,8 @@
 
 # %%
 # ----------------- Parameters for interactive development --------------
-import uuid
-
 P = {
     "data_lake_root": "/pipeline-outputs/data-lake",
-    "run.run_directory": f"/pipeline-outputs/runlogs/{uuid.uuid4()}",
     "task.nr_train_images": 600,
 }
 # %% tags=["parameters"]
@@ -32,11 +29,10 @@ P = {
 
 
 # %%
-from common.io import runlog_root
 from common.genlogger import GenLogger
 
 # %%
-logger = GenLogger(runlog_root(P))
+logger = GenLogger(None)
 
 
 # %% [markdown]
@@ -145,7 +141,3 @@ write_onnx(
 )
 
 # %%
-# ---
-
-# %%
-logger.persist()

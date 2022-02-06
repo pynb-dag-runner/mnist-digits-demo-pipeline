@@ -17,10 +17,6 @@ def datalake_root(P):
     return Path(P["pipeline.data_lake_root"])
 
 
-def runlog_root(P):
-    return Path(P["run.run_directory"])
-
-
 def write_numpy(path: Path, numpy_obj):
     """
     Serialize and write a numpy array to a local file

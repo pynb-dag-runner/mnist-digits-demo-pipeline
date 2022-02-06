@@ -6,11 +6,8 @@
 
 # %%
 # ----------------- Parameters for interactive development --------------
-import uuid
-
 P = {
     "pipeline.data_lake_root": "/pipeline-outputs/data-lake",
-    "run.run_directory": f"/pipeline-outputs/runlogs/{uuid.uuid4()}",
 }
 # %% tags=["parameters"]
 # - During automated runs parameters will be injected in the below cell -
@@ -40,7 +37,7 @@ from common.genlogger import GenLogger
 
 
 # %%
-old_logger = GenLogger(datalake_root(P))
+old_logger = GenLogger(None)
 logger = PydarLogger(P)
 
 # %%
