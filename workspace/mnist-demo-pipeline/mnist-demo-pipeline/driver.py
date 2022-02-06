@@ -30,9 +30,9 @@ def get_args():
 
     parser = ArgumentParser()
     parser.add_argument(
-        "--runlogs_root",
+        "--otel_spans_outputfile",
         type=str,
-        help="local directory for pipeline runlog outputs",
+        help="output file path for logging OpenTelemtry spans of pipeline run",
     )
     parser.add_argument(
         "--data_lake_root",
@@ -49,9 +49,9 @@ def get_args():
     args = parser.parse_args()
 
     print("*** Command line parameters ***")
-    print(f"  - runlogs_root     : {args.runlogs_root}")
-    print(f"  - data_lake_root   : {args.data_lake_root}")
-    print(f"  - run_environment  : {args.run_environment}")
+    print(f"  - otel_spans_outputfile : {args.otel_spans_outputfile}")
+    print(f"  - data_lake_root        : {args.data_lake_root}")
+    print(f"  - run_environment       : {args.run_environment}")
 
     return args
 
@@ -60,25 +60,10 @@ args = get_args()
 
 COMMON_PARAMETERS = {
     # data lake root is pipeline-scoped parameter
-    "flow.data_lake_root": args.data_lake_root,
-    "flow.runlogs_root": args.runlogs_root,
-    "flow.run_environment": args.run_environment,
-    "flow.pipeline_run_id": str(uuid.uuid4()),
+    "pipeline.data_lake_root": args.data_lake_root,
+    "pipeline.run_environment": args.run_environment,
+    "pipeline.pipeline_run_id": str(uuid.uuid4()),
 }
-
-
-def make_runlogs_root():
-    # If we are running in dev (eg automatic run in VS Code, or triggerd from cli)
-    # then put each pipeline run in a separate directory under runlogs_root.
-    if args.run_environment == "dev":
-        start_time: str = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-        runlog_prefix = start_time
-    else:
-        runlog_prefix = ""
-
-    result = Path(args.runlogs_root) / runlog_prefix
-    result.mkdir(parents=True, exist_ok=True)
-    return result
 
 
 def make_notebook_task(
@@ -133,7 +118,6 @@ run_in_sequence(task_ingest, task_split_train_test)
 
 # task_summary = make_notebook_task(notebook_path=Path("./notebooks/summary.py"))
 
-###
 
 print("---- Running mnist-demo-pipeline ----")
 
@@ -151,8 +135,6 @@ for s in rec.spans.exception_events():
 print("---- Writing spans ----")
 
 print(" - Total number of spans recorded   :", len(rec.spans))
-span_path = make_runlogs_root() / "opentelemetry-spans.json"
-print(" - Output filename                  :", str(span_path))
-write_json(span_path, list(rec.spans))
+write_json(Path(args.otel_spans_outputfile), list(rec.spans))
 
 print("---- Done ----")

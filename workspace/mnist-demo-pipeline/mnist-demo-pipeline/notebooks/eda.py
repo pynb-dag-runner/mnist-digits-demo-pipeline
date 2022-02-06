@@ -9,7 +9,7 @@
 import uuid
 
 P = {
-    "flow.data_lake_root": "/pipeline-outputs/data-lake",
+    "pipeline.data_lake_root": "/pipeline-outputs/data-lake",
     "run.run_directory": f"/pipeline-outputs/runlogs/{uuid.uuid4()}",
 }
 # %% tags=["parameters"]
@@ -109,7 +109,7 @@ assert set(y) == set(range(10))
 # %%
 digit_counts: Dict[int, int] = dict(collections.Counter(y))
 
-logger.log_value("nr_digits", {str(k): v for k, v in digit_counts.items()})
+logger.log_value("counts_per_digit", {str(k): v for k, v in digit_counts.items()})
 
 # %%
 fig = plot_dict_to_barplot(
