@@ -69,9 +69,9 @@ clean:
 
 draw-visuals-from-logged-spans:
 	./pynb-dag-runner/scripts/process_otel_spans.sh \
-	    $(pwd)/pipeline-outputs/opentelemetry-spans.json \
+	    $$(pwd)/pipeline-outputs/opentelemetry-spans.json \
 		mnist-demo-pipeline-cicd \
-		$(pwd)/pipeline-outputs
+		$$(pwd)/pipeline-outputs
 
 test-and-run-pipeline:
 	# Single command to run all tests and the demo pipeline
