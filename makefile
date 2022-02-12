@@ -67,18 +67,11 @@ clean:
 	        (cd common; make clean; ) && \
 	        (cd mnist-demo-pipeline; make clean-pipeline-outputs)"
 
-draw-runlog-visuals:
-	# Rendering images should only be run when RUN_ENVIRONMENT="ci"
-	# (rending will not work in RUN_ENVIRONMENT="ci" due to different
-	# directory layout)
-	#
-	# Only rendering png for now, generated task-dependencies.svg is broken
-	if [ "$(RUN_ENVIRONMENT)" = "ci" ]; then ( \
-	    export RUNLOGS_ROOT="$$(pwd)/pipeline-outputs/runlogs"; \
-	    export IMG_OUTPUT_DIRECTORY="$$(pwd)/pipeline-outputs"; \
-	    cd pynb-dag-runner/tools/draw-runlog-visuals; \
-	    make draw-runlog-visuals IMG_OUTPUT_FORMAT="png"; \
-	); fi
+draw-visuals-from-logged-spans:
+	./pynb-dag-runner/scripts/process_otel_spans.sh \
+	    $$(pwd)/pipeline-outputs/opentelemetry-spans.json \
+		mnist-demo-pipeline-cicd \
+		$$(pwd)/pipeline-outputs
 
 test-and-run-pipeline:
 	# Single command to run all tests and the demo pipeline
@@ -96,4 +89,4 @@ test-and-run-pipeline:
 	        make run; \
 	    )"
 
-	make draw-runlog-visuals RUN_ENVIRONMENT=$(RUN_ENVIRONMENT)
+	make draw-visuals-from-logged-spans
