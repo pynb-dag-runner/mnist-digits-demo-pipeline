@@ -33,11 +33,9 @@ from pynb_dag_runner.tasks.task_opentelemetry_logging import PydarLogger
 
 #
 from common.io import datalake_root, read_numpy
-from common.genlogger import GenLogger
 
 
 # %%
-old_logger = GenLogger(None)
 logger = PydarLogger(P)
 
 # %%
@@ -117,7 +115,7 @@ fig = plot_dict_to_barplot(
 )
 
 # %%
-old_logger.log_image("samples_per_digit.png", fig)
+logger.log_figure("logged-images/samples_per_digit.png", fig)
 
 # %% [markdown]
 # - All digits 0, 1, ..., 8, 9 are (approximatively) equally represented in the data set
@@ -144,7 +142,7 @@ fig = plot_dict_to_barplot(
 )
 
 # %%
-old_logger.log_image("pixel_value_counts.png", fig)
+logger.log_figure("logged-images/pixel_value_counts.png", fig)
 
 # %% [markdown]
 # - The pixel values in the images are encoded with numbers 0, .., 16.
@@ -174,7 +172,7 @@ for digit in range(10):
     fig.tight_layout()
     fig.show()
 
-    old_logger.log_image(f"digit-{digit}-images.png", fig)
+    logger.log_figure(f"logged-images/digits/{digit}-images.png", fig)
 
 # %%
 ###
