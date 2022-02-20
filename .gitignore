@@ -1,6 +1,0 @@
-docker/JUPYTER_TOKEN
-pipeline-outputs
-
-# do not commit ipynb notebooks or notebook checkpoints into git
-*.ipynb
-.ipynb_checkpoints
