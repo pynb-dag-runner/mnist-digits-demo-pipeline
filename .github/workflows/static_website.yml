@@ -11,8 +11,8 @@ on:
 
   workflow_dispatch:
 
-permissions:
-  contents: "none"  # project repo:s are public
+#permissions:
+#  contents: "none"  # project repo:s are public
 
 jobs:
   run-all-tests:
