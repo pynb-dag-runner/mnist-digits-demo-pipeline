@@ -44,17 +44,11 @@ jobs:
           git config --local user.name "GitHub Action Bot"
           git commit -m "update"
 
-          #git remote add origin https://bot:$GITHUB_TOKEN@github.com/pynb-dag-runner/mnist-digits-demo-pipeline.git
-          cat .git/config
-
-          echo "--- debug of log ---"
-          git status
-          git --no-pager log --oneline
-
           echo "--- push ---"
-          git push -f https://bot:$GITHUB_TOKEN@github.com/pynb-dag-runner/mnist-digits-demo-pipeline.git gh-pages:gh-pages
+          git push --force \
+            https://bot:$GITHUB_TOKEN@github.com/pynb-dag-runner/mnist-digits-demo-pipeline.git \
+            gh-pages:gh-pages
 
-          #git push --force --set-upstream origin gh-pages
           #--set-upstream gh-pages
         env:
           GITHUB_TOKEN: ${{ secrets.github_token }}
