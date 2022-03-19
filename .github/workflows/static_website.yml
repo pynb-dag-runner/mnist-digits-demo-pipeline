@@ -23,70 +23,59 @@ jobs:
   update-static-website:
     runs-on: [ubuntu-20.04]
     steps:
+      - uses: actions/checkout@v3
+        with:
+          repository: pynb-dag-runner/ci-utils
+          persist-credentials: true
+          path: ci-utils
+
+      - name: "Install Taskfile"
+        working-directory: ${{ github.workspace }}
+        run: |
+          sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b .
+          ./task --version
+
+      - name: "Build Docker file"
+        working-directory: ${{ github.workspace }}
+        run: |
+          cd ci-utils
+          ../task docker:build
+
+      - name: "Fetch all artefacts into directory tree"
+        working-directory: ${{ github.workspace }}
+        run: |
+          docker run -t --rm \
+            --volume $GITHUB_WORKSPACE:/github_workspace \
+            -e GITHUB_TOKEN \
+            ci-tools-image "(\
+              cd /github_workspace/ci-utils/workspace; \
+              pip install -e .; \
+              static_builder \
+                --gh_repo_owner pynb-dag-runner \
+                --gh_repo_name mnist-digits-demo-pipeline \
+                --output_dir /github_workspace/wwwroot/pipeline-artefacts/; \
+            )"
+        env:
+          GITHUB_TOKEN: ${{ secrets.github_token }}
+          GITHUB_WORKSPACE: ${{ github.workspace }}
+
       - name: "Push wwwroot content to repo gh-pages branch"
         working-directory: ${{ github.workspace }}
         run: |
-          #cd ${{ github.workspace }}/wwwroot
-          cd ${{ github.workspace }}
-          mkdir www
-          cd www
-          touch a_file
-          touch another_file
+          cd ${{ github.workspace }}/wwwroot
 
           git init
           git checkout -b gh-pages
 
-          echo "--- adding files + commit ---"
-          git add a_file
-          git add another_file
+          git add -A
 
           git config --local user.email "gh-automation-bot@github.com"
           git config --local user.name "GitHub Action Bot"
           git commit -m "update"
 
-          echo "--- push ---"
           git push --force \
-            https://bot:$GITHUB_TOKEN@github.com/pynb-dag-runner/mnist-digits-demo-pipeline.git \
+            https://token_user:$GITHUB_TOKEN@github.com/pynb-dag-runner/mnist-digits-demo-pipeline.git \
             gh-pages:gh-pages
 
         env:
           GITHUB_TOKEN: ${{ secrets.github_token }}
-
-      # - uses: actions/checkout@v3
-      #   with:
-      #     repository: pynb-dag-runner/ci-utils
-      #     persist-credentials: true
-      #     path: ci-utils
-
-      # - name: "Install Taskfile"
-      #   working-directory: ${{ github.workspace }}
-      #   run: |
-      #     sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b .
-      #     ./task --version
-
-      # - name: "Build Docker file"
-      #   working-directory: ${{ github.workspace }}
-      #   run: |
-      #     cd ci-utils
-      #     ../task docker:build
-
-      # - name: "Fetch all artefacts into directory tree"
-      #   working-directory: ${{ github.workspace }}
-      #   run: |
-      #     docker run -t --rm \
-      #       --volume $GITHUB_WORKSPACE:/github_workspace \
-      #       -e GITHUB_TOKEN \
-      #       ci-tools-image "(\
-      #         cd /github_workspace/ci-utils/workspace; \
-      #         pip install -e .; \
-      #         static_builder \
-      #           --gh_repo_owner pynb-dag-runner \
-      #           --gh_repo_name mnist-digits-demo-pipeline \
-      #           --output_dir /github_workspace/wwwroot/files/; \
-      #       )"
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.github_token }}
-      #     GITHUB_WORKSPACE: ${{ github.workspace }}
-
-      #   #env:
-      #   # GITHUB_TOKEN: ${{ secrets.github_token }}
