@@ -51,12 +51,7 @@ jobs:
           git --no-pager log --oneline
 
           echo "--- push ---"
-          git push --force --set-upstream gh-pages
-
-          # git push --force \
-          #  --set-upstream \
-          #  https://bot:$GITHUB_TOKEN@github.com/pynb-dag-runner/mnist-digits-demo-pipeline.git \
-          #  gh-pages
+          git push --force origin --set-upstream gh-pages
 
       # - uses: actions/checkout@v3
       #   with:
