@@ -20,7 +20,7 @@ defaults:
     # working-directory: ${{ github.workspace }}
 
 jobs:
-  run-all-tests:
+  update-static-website:
     runs-on: [ubuntu-20.04]
     steps:
       - name: "Push wwwroot content to repo gh-pages branch"
@@ -44,8 +44,7 @@ jobs:
           git config --local user.name "GitHub Action Bot"
           git commit -m "update"
 
-          git remote add origin https://${{ secrets.github_token }}@github.com/pynb-dag-runner/mnist-digits-demo-pipeline.git
-
+          git remote set-url origin https://${{ secrets.github_token }}@github.com/pynb-dag-runner/mnist-digits-demo-pipeline.git
 
           cat .git/config
 
