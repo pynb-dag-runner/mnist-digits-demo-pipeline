@@ -38,3 +38,18 @@ jobs:
       - name: "Build Docker file"
         run: |
           ./task docker:build
+
+      - name: "Fetch all artefacts into directory tree"
+        run: |
+          docker run -t \
+              -l $(pwd):/repo_root \
+              -e SECRET_TOKEN \
+              ci-tools-image \
+              "(\
+                  cd /repo_root; \
+                  ls -al .; \
+                  python -v; \
+                  printenv; \
+              \)"
+        env:
+          SECRET_TOKEN: "123"
