@@ -64,6 +64,8 @@ jobs:
         run: |
           cd ${{ github.workspace }}/wwwroot
 
+          find . > all_files.txt
+
           git init
           git checkout -b gh-pages
 
