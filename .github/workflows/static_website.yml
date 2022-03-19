@@ -54,7 +54,7 @@ jobs:
           echo "--- push ---"
           git push --force --set-upstream origin gh-pages
           #--set-upstream gh-pages
-       env:
+        env:
           GITHUB_TOKEN: ${{ secrets.github_token }}
 
       # - uses: actions/checkout@v3
