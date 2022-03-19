@@ -17,6 +17,7 @@ permissions:
 defaults:
   run:
     shell: bash
+    working-directory: ${{ github.workspace }}
 
 jobs:
   run-all-tests:
@@ -29,13 +30,11 @@ jobs:
           persist-credentials: true
 
       - name: "Install Taskfile"
-        working-directory: ${{ github.workspace }}
         run: |
           sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b .
           ./task --version
           ./task --list
 
       - name: "Build Docker file"
-        working-directory: ${{ github.workspace }}
         run: |
           ./task docker:build
