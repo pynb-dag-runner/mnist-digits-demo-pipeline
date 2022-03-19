@@ -46,15 +46,29 @@ jobs:
         working-directory: ${{ github.workspace }}
         run: |
           docker run -t --rm \
-            --volume $(pwd):/repo_root \
+            --volume $GITHUB_WORKSPACE:/github_workspace \
             -e GITHUB_TOKEN \
             ci-tools-image "(\
-              cd /repo_root/ci-utils/workspace; \
+              cd /github_workspace/ci-utils/workspace; \
               pip install -e .; \
               static_builder \
                 --gh_repo_owner pynb-dag-runner \
                 --gh_repo_name mnist-digits-demo-pipeline \
-                --output_dir /repo_root/public_html/files/; \
+                --output_dir /github_workspace/wwwroot/files/; \
             )"
         env:
           GITHUB_TOKEN: ${{ secrets.github_token }}
+          GITHUB_WORKSPACE: ${{ github.workspace }}
+
+      - name: "Push to gh-pages branch"
+        working-directory: ${{ github.workspace }}
+        run: |
+          cd ${{ github.workspace }}/wwwroot
+          git init
+          git add -A
+          git config --local user.email "gh-automation@github.com"
+          git config --local user.name "GitHub Action"
+          git commit -m "update"
+
+        #env:
+        #  GITHUB_TOKEN: ${{ secrets.github_token }}
