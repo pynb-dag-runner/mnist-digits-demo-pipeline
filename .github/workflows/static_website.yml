@@ -60,15 +60,34 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.github_token }}
           GITHUB_WORKSPACE: ${{ github.workspace }}
 
-      - name: "Push to gh-pages branch"
+      - name: "Push wwwroot content to repo gh-pages branch"
         working-directory: ${{ github.workspace }}
         run: |
-          cd ${{ github.workspace }}/wwwroot
+          #cd ${{ github.workspace }}/wwwroot
+          cd ${{ github.workspace }}
+          mkdir www
+          cd www
+          touch a_file
+          touch another_file
+
           git init
-          git add -A
-          git config --local user.email "gh-automation@github.com"
-          git config --local user.name "GitHub Action"
+          git checkout -b gh-pages
+
+          #git add -A
+          git add a_file
+          git add another_file
+
+          git config --local user.email "gh-automation-bot@github.com"
+          git config --local user.name "GitHub Action Bot"
           git commit -m "update"
 
-        #env:
-        #  GITHUB_TOKEN: ${{ secrets.github_token }}
+          git status
+          git --no-pager log --oneline
+
+          git push --force \
+            --set-upstream \
+            https://$GITHUB_TOKEN@github.com/pynb-dag-runner/mnist-digits-demo-pipeline.git \
+            gh-pages
+
+        env:
+          GITHUB_TOKEN: ${{ secrets.github_token }}
