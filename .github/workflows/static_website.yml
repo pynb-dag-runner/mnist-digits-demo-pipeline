@@ -67,6 +67,7 @@ jobs:
           repository: pynb-dag-runner/mlflow
           persist-credentials: true
           path: mlflow-repo
+          ref: static_mlflow  # <-- special branch !!!
 
       - name: "Build static ML Flow"
         working-directory: ${{ github.workspace }}
