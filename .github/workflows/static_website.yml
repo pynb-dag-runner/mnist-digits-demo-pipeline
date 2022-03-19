@@ -39,11 +39,11 @@ jobs:
           #git add -A
           git add a_file
           git add another_file
+          git commit -m "update"
 
           git config --local user.email "gh-automation-bot@github.com"
           git config --local user.name "GitHub Action Bot"
-          git remote set-url origin https://${{ secrets.github_token }}@github.com/pynb-dag-runner/mnist-digits-demo-pipeline.git
-          git commit -m "update"
+          git remote add origin https://${{ secrets.github_token }}@github.com/pynb-dag-runner/mnist-digits-demo-pipeline.git
 
           git status
           git --no-pager log --oneline
