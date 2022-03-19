@@ -45,19 +45,20 @@ jobs:
         working-directory: ${{ github.workspace }}
         run: |
           docker run -t --rm \
-            --volume $GITHUB_WORKSPACE:/github_workspace \
+            --volume ${{ github.workspace }}:/github_workspace \
             -e GITHUB_TOKEN \
+            -e GITHUB_REPOSITORY \
+            -e GITHUB_REPOSITORY_OWNER \
             ci-tools-image "(\
               cd /github_workspace/ci-utils/workspace; \
               pip install .; \
               static_builder \
-                --gh_repo_owner pynb-dag-runner \
-                --gh_repo_name mnist-digits-demo-pipeline \
+                --gh_repo_owner $GITHUB_REPOSITORY_OWNER \
+                --gh_repo_name $GITHUB_REPOSITORY \
                 --output_dir /github_workspace/wwwroot/pipeline-artefacts/; \
             )"
         env:
           GITHUB_TOKEN: ${{ secrets.github_token }}
-          GITHUB_WORKSPACE: ${{ github.workspace }}
 
       - name: "Push wwwroot content to repo gh-pages branch"
         working-directory: ${{ github.workspace }}
