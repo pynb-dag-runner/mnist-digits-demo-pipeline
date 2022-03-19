@@ -28,6 +28,7 @@ jobs:
         with:
           repository: pynb-dag-runner/ci-utils
           persist-credentials: true
+          path: ci-utils
 
       - name: "Install Taskfile"
         working-directory: ${{ github.workspace }}
@@ -48,8 +49,11 @@ jobs:
             --volume $(pwd):/repo_root \
             -e SECRET_TOKEN \
             ci-tools-image "(\
-              cd /; \
+              cd /repo_root; \
               ls -al .; \
+              cd ci-utils/workspace; \
+              pip install -e .; \
+              static_builder --help; \
               printenv; \
             )"
         env:
