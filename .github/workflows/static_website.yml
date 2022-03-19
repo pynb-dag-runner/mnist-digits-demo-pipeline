@@ -49,7 +49,6 @@ jobs:
             https://bot:$GITHUB_TOKEN@github.com/pynb-dag-runner/mnist-digits-demo-pipeline.git \
             gh-pages:gh-pages
 
-          #--set-upstream gh-pages
         env:
           GITHUB_TOKEN: ${{ secrets.github_token }}
 
