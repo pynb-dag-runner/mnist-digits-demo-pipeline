@@ -65,6 +65,7 @@ jobs:
           cd ${{ github.workspace }}/wwwroot
 
           find . > all_files.txt
+          du -hs * > usage.txt
 
           git init
           git checkout -b gh-pages
@@ -76,8 +77,5 @@ jobs:
           git commit -m "update"
 
           git push --force \
-            https://token_user:$GITHUB_TOKEN@github.com/pynb-dag-runner/mnist-digits-demo-pipeline.git \
+            https://my_token_user:${{ secrets.github_token }}@github.com/pynb-dag-runner/mnist-digits-demo-pipeline.git \
             gh-pages:gh-pages
-
-        env:
-          GITHUB_TOKEN: ${{ secrets.github_token }}
