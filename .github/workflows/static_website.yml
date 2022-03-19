@@ -44,8 +44,7 @@ jobs:
           git config --local user.name "GitHub Action Bot"
           git commit -m "update"
 
-          git remote set-url origin https://${{ secrets.github_token }}@github.com/pynb-dag-runner/mnist-digits-demo-pipeline.git
-
+          git remote add origin https://${{ secrets.github_token }}@github.com/pynb-dag-runner/mnist-digits-demo-pipeline.git
           cat .git/config
 
           echo "--- debug of log ---"
