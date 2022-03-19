@@ -1,0 +1,83 @@
+name: "Update static website"
+
+on:
+  push:
+    branches:
+      - development
+
+  pull_request:
+    branches:
+      - development
+
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+defaults:
+  run:
+    shell: bash
+    # working-directory: ${{ github.workspace }}
+
+jobs:
+  update-static-website:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          repository: pynb-dag-runner/ci-utils
+          persist-credentials: true
+          path: ci-utils
+
+      - name: "Install Taskfile"
+        working-directory: ${{ github.workspace }}
+        run: |
+          sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b .
+          ./task --version
+
+      - name: "Build Docker file"
+        working-directory: ${{ github.workspace }}
+        run: |
+          cd ci-utils
+          ../task docker:build
+
+      - name: "Fetch all artefacts into directory tree"
+        working-directory: ${{ github.workspace }}
+        run: |
+          # GITHUB_REPOSITORY has format owner/repo-name.
+          docker run -t --rm \
+            --volume ${{ github.workspace }}:/github_workspace \
+            -e GITHUB_TOKEN \
+            -e GITHUB_REPOSITORY \
+            ci-tools-image "(\
+              cd /github_workspace/ci-utils/workspace; \
+              pip install .; \
+              static_builder \
+                --github_repository $GITHUB_REPOSITORY \
+                --output_dir /github_workspace/www-root/pipeline-artefacts/; \
+            )"
+        env:
+          GITHUB_TOKEN: ${{ secrets.github_token }}
+
+      - name: "Push www-root content to repo gh-pages branch"
+        working-directory: ${{ github.workspace }}
+        run: |
+          cd ${{ github.workspace }}/www-root
+
+          # Github pages does not allow directory listing, add files in root
+          # for troubleshooting
+          find . > list_all_files.txt
+          du -hs * > disk_usage.txt
+
+          git init
+          git checkout -b gh-pages
+
+          git add -A
+
+          git config --local user.email "gh-automation-bot@github.com"
+          git config --local user.name "GitHub Action Bot"
+          git commit -m "update"
+
+          git push --force \
+            https://my_token_user:${{ secrets.github_token }}@github.com/${GITHUB_REPOSITORY}.git \
+            gh-pages:gh-pages
