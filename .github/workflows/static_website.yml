@@ -14,6 +14,10 @@ on:
 permissions:
   contents: "read"
 
+defaults:
+  run:
+    shell: bash
+
 jobs:
   run-all-tests:
     runs-on: [ubuntu-20.04]
@@ -24,12 +28,14 @@ jobs:
           repository: pynb-dag-runner/ci-utils
           persist-credentials: true
 
-      - name: "test content"
-        shell: bash
+      - name: "Install Taskfile"
         working-directory: ${{ github.workspace }}
         run: |
-            ls -la .
-            echo $PATH
-            wget -h
-            curl -h
-            sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b ~/.local/bin
+          sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b .
+          ./task --version
+          ./task list
+
+      - name: "Build Docker file"
+        working-directory: ${{ github.workspace }}
+        run: |
+          ./task docker:build
