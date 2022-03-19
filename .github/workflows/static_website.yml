@@ -47,7 +47,7 @@ jobs:
         run: |
           docker run -t --rm \
             --volume $(pwd):/repo_root \
-            -e SECRET_TOKEN \
+            -e GITHUB_TOKEN \
             ci-tools-image "(\
               cd /repo_root/ci-utils/workspace; \
               pip install -e .; \
@@ -57,4 +57,4 @@ jobs:
                 --output_dir /repo_root/public_html/files/; \
             )"
         env:
-          SECRET_TOKEN: "123"
+          GITHUB_TOKEN: ${{ secrets.github_token }}
