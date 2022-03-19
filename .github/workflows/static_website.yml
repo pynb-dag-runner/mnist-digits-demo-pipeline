@@ -21,7 +21,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          name:  pynb-dag-runner/ci-utils
+          repository: pynb-dag-runner/ci-utils
           persist-credentials: true
 
       - name: "test content"
