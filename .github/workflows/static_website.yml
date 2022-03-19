@@ -59,6 +59,30 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.github_token }}
 
+      ###
+      ### Make static ML Flow
+      ###
+      - uses: actions/checkout@v3
+        with:
+          repository: pynb-dag-runner/mlflow
+          persist-credentials: true
+          path: mlflow-repo
+
+      - name: "Build static ML Flow"
+        working-directory: ${{ github.workspace }}
+        run: |
+          ls -la .
+          echo "----"
+          cd mlflow-repo/mlflow/server/js
+          ls -la .
+          make docker-build-static-ui
+          echo "----"
+          cd build
+          find .
+
+      ###
+      ### Deploy
+      ###
       - name: "Push www-root content to repo gh-pages branch"
         working-directory: ${{ github.workspace }}
         run: |
