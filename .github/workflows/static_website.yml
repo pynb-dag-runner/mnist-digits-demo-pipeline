@@ -46,12 +46,16 @@ jobs:
 
           git remote add origin https://${{ secrets.github_token }}@github.com/pynb-dag-runner/mnist-digits-demo-pipeline.git
 
+
+          cat .git/config
+
           echo "--- debug of log ---"
           git status
           git --no-pager log --oneline
 
           echo "--- push ---"
-          git push --force origin --set-upstream gh-pages
+          git push --force origin
+          #--set-upstream gh-pages
 
       # - uses: actions/checkout@v3
       #   with:
