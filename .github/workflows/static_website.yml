@@ -64,9 +64,10 @@ jobs:
         run: |
           cd ${{ github.workspace }}/www-root
 
-          # Github pages does not allow directory listing, so add manual endpoints
-          find . > list-all-files.txt
-          du -hs * > disk-usage.txt
+          # Github pages does not allow directory listing, add files in root
+          # for troubleshooting
+          find . > list_all_files.txt
+          du -hs * > disk_usage.txt
 
           git init
           git checkout -b gh-pages
