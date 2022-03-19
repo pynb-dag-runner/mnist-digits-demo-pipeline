@@ -36,23 +36,21 @@ jobs:
           ./task --version
           ./task --list
 
-      - name: "Build Docker file"
-        working-directory: ${{ github.workspace }}
-        run: |
-          ./task docker:build
+      # - name: "Build Docker file"
+      #   working-directory: ${{ github.workspace }}
+      #   run: |
+      #     ./task docker:build
 
       - name: "Fetch all artefacts into directory tree"
         working-directory: ${{ github.workspace }}
         run: |
-          docker run -t \
-              -l $(pwd):/repo_root \
-              -e SECRET_TOKEN \
-              ci-tools-image \
-              "(\
-                  cd /repo_root; \
-                  ls -al .; \
-                  python -v; \
-                  printenv; \
-              \)"
+          docker run -t --rm \
+            --volume $(pwd):/repo_root \
+            -e SECRET_TOKEN \
+            ci-tools-image "(\
+              cd /; \
+              ls -al .; \
+              printenv; \
+            )"
         env:
           SECRET_TOKEN: "123"
