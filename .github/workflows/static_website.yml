@@ -49,12 +49,12 @@ jobs:
             --volume $(pwd):/repo_root \
             -e SECRET_TOKEN \
             ci-tools-image "(\
-              cd /repo_root; \
-              ls -al .; \
-              cd ci-utils/workspace; \
+              cd /repo_root/ci-utils/workspace; \
               pip install -e .; \
-              static_builder --help; \
-              printenv; \
+              static_builder \
+                --gh_repo_owner pynb-dag-runner \
+                --gh_repo_name mnist-digits-demo-pipeline \
+                --output_dir /repo_root/public_html/files/; \
             )"
         env:
           SECRET_TOKEN: "123"
