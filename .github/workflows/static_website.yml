@@ -28,7 +28,6 @@ jobs:
           repository: pynb-dag-runner/ci-utils
           persist-credentials: true
           path: ci-utils
-          ref: cli_repo_parameter_format
 
       - name: "Install Taskfile"
         working-directory: ${{ github.workspace }}
@@ -55,18 +54,19 @@ jobs:
               pip install .; \
               static_builder \
                 --github_repository $GITHUB_REPOSITORY \
-                --output_dir /github_workspace/wwwroot/pipeline-artefacts/; \
+                --output_dir /github_workspace/www-root/pipeline-artefacts/; \
             )"
         env:
           GITHUB_TOKEN: ${{ secrets.github_token }}
 
-      - name: "Push wwwroot content to repo gh-pages branch"
+      - name: "Push www-root content to repo gh-pages branch"
         working-directory: ${{ github.workspace }}
         run: |
-          cd ${{ github.workspace }}/wwwroot
+          cd ${{ github.workspace }}/www-root
 
-          find . > all_files.txt
-          du -hs * > usage.txt
+          # Github pages does not allow directory listing, so add manual endpoints
+          find . > list-all-files
+          du -hs * > disk-usage
 
           git init
           git checkout -b gh-pages
@@ -78,5 +78,5 @@ jobs:
           git commit -m "update"
 
           git push --force \
-            https://my_token_user:${{ secrets.github_token }}@github.com/pynb-dag-runner/mnist-digits-demo-pipeline.git \
+            https://my_token_user:${{ secrets.github_token }}@github.com/${GITHUB_REPOSITORY}.git \
             gh-pages:gh-pages
