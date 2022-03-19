@@ -128,4 +128,4 @@ jobs:
               ${{ github.workspace }}/pipeline-outputs
               !**/.gitkeep
           if-no-files-found: error
-          retention-days: 10
+          retention-days: 5
