@@ -36,10 +36,10 @@ jobs:
           ./task --version
           ./task --list
 
-      # - name: "Build Docker file"
-      #   working-directory: ${{ github.workspace }}
-      #   run: |
-      #     ./task docker:build
+      - name: "Build Docker file"
+        working-directory: ${{ github.workspace }}
+        run: |
+          ./task docker:build
 
       - name: "Fetch all artefacts into directory tree"
         working-directory: ${{ github.workspace }}
