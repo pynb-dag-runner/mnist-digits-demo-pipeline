@@ -72,17 +72,10 @@ jobs:
       - name: "Build static ML Flow"
         working-directory: ${{ github.workspace }}
         run: |
-          ls -la .
-          echo "----"
           cd mlflow-repo/mlflow/server/js
-          ls -la .
           make docker-build-image-for-build-static-ui
-          echo "----"
           make docker-build-static-ui
-          echo "----"
-          cd build
-          pwd
-          find .
+          cp -r build/. /www-root
 
       ###
       ### Deploy
