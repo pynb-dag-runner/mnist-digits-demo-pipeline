@@ -75,7 +75,7 @@ jobs:
           cd mlflow-repo/mlflow/server/js
           make docker-build-image-for-build-static-ui
           make docker-build-static-ui
-          cp -r build/. /www-root
+          cp -r build/. ${{ github.workspace }}/www-root
 
       ###
       ### Deploy
