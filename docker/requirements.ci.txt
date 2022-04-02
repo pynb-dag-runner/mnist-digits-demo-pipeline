@@ -17,5 +17,5 @@ matplotlib==3.5.1
 
 # libraries for running unit and static tests on code
 pytest==6.2.5
-black==21.12b0
+black==22.3.0
 mypy==0.931
