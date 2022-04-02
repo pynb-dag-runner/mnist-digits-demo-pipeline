@@ -6,7 +6,7 @@ FROM mnist-demo-pipeline-cicd
 #  - VS Code devcontainer
 
 USER root
-RUN apt-get install -y -q entr
+RUN apt-get -qq -y install --no-install-recommends entr
 USER host_user
 
 RUN : && \
