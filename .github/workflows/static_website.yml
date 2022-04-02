@@ -49,8 +49,8 @@ jobs:
             -e GITHUB_TOKEN \
             -e GITHUB_REPOSITORY \
             ci-tools-image "(\
-              cd /github_workspace/ci-utils/workspace; \
-              pip install .; \
+              cd /github_workspace/pynb-dag-runner-repo/otel_output_parser/workspace; \
+              pip install -e . ; \
               static_builder \
                 --github_repository $GITHUB_REPOSITORY \
                 --output_dir /github_workspace/www-root/pipeline-artefacts/; \
