@@ -12,7 +12,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: write # need write access to this repo to update static website
 
 defaults:
   run:
@@ -25,21 +25,20 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          repository: pynb-dag-runner/ci-utils
+          repository: pynb-dag-runner/pynb-dag-runner
+          path: pynb-dag-runner-repo
           persist-credentials: true
-          path: ci-utils
 
       - name: "Install Taskfile"
         working-directory: ${{ github.workspace }}
         run: |
           sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b .
-          ./task --version
+          ${{ github.workspace }}/task --version
 
       - name: "Build Docker file"
-        working-directory: ${{ github.workspace }}
+        working-directory: ${{ github.workspace }}/pynb-dag-runner-repo/otel_output_parser
         run: |
-          cd ci-utils
-          ../task docker:build
+          ${{ github.workspace }}/task docker:build
 
       - name: "Fetch all artefacts into directory tree"
         working-directory: ${{ github.workspace }}
@@ -67,12 +66,11 @@ jobs:
           repository: pynb-dag-runner/mlflow
           persist-credentials: true
           path: mlflow-repo
-          ref: static_mlflow  # <-- special branch !!!
+          ref: static_mlflow
 
       - name: "Build static ML Flow"
-        working-directory: ${{ github.workspace }}
+        working-directory: ${{ github.workspace }}/mlflow-repo/mlflow/server/js
         run: |
-          cd mlflow-repo/mlflow/server/js
           make docker-build-image-for-build-static-ui
           make docker-build-static-ui
           cp -r build/. ${{ github.workspace }}/www-root
@@ -81,10 +79,8 @@ jobs:
       ### Deploy
       ###
       - name: "Push www-root content to repo gh-pages branch"
-        working-directory: ${{ github.workspace }}
+        working-directory: ${{ github.workspace }}/www-root
         run: |
-          cd ${{ github.workspace }}/www-root
-
           # Github pages does not allow directory listing, add files in root
           # for troubleshooting
           find . > list_all_files.txt
