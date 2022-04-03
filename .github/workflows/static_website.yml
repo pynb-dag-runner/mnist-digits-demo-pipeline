@@ -67,7 +67,8 @@ jobs:
           repository: pynb-dag-runner/mlflow
           persist-credentials: true
           path: mlflow-repo
-          ref: static_mlflow
+          #ref: static_mlflow
+          ref: task__and_pipeline_runs
 
       # export static ui data (for easier offline debugging)
       - name: "Store ui_static_data.js with data for UI"
