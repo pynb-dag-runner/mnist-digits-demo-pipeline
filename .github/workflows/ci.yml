@@ -123,7 +123,7 @@ jobs:
       - name: "Store pipeline output files"
         uses: actions/upload-artifact@v2
         with:
-          name: mnist-digits-demo-pipeline---opentelemetry-outputs
+          name: mnist-digits-demo-pipeline---opentelemetry-outputs-v1
           path: |
               ${{ github.workspace }}/pipeline-outputs
               !**/.gitkeep
