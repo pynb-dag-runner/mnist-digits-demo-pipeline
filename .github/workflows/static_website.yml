@@ -83,6 +83,10 @@ jobs:
       - name: "Build static ML Flow"
         working-directory: ${{ github.workspace }}/mlflow-repo/mlflow/server/js
         run: |
+          # copy static pipeline-task-run into ui-source directory
+          cp ${{ github.workspace }}/ui_static_data.js \
+             ./src/experiment-tracking/static-data/StaticData.js
+
           make docker-build-image-for-build-static-ui
           make docker-build-static-ui
           cp -r build/. ${{ github.workspace }}/www-root
