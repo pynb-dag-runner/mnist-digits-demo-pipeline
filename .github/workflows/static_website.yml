@@ -67,8 +67,9 @@ jobs:
           repository: pynb-dag-runner/mlflow
           persist-credentials: true
           path: mlflow-repo
-          #ref: static_mlflow
-          ref: task__and_pipeline_runs
+          # replace below with feature branch of `mlflow` repo for testing new
+          # UI features using logs from this repo
+          ref: static_mlflow
 
       # export static ui data (for easier offline debugging)
       - name: "Store ui_static_data.js with data for UI"
