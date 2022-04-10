@@ -69,7 +69,7 @@ jobs:
           path: mlflow-repo
           # replace below with feature branch of `mlflow` repo for testing new
           # UI features using logs from this repo
-          ref: static_mlflow
+          ref: add_metrics_n_parameters
 
       # export static ui data (for easier offline debugging)
       - name: "Store ui_static_data.js with data for UI"
