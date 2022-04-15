@@ -27,7 +27,7 @@ jobs:
         with:
           repository: pynb-dag-runner/pynb-dag-runner
           path: pynb-dag-runner-repo
-          ref: revised_artifact_format
+          #ref: revised_artifact_format
           persist-credentials: true
 
       - name: "Install Taskfile"
