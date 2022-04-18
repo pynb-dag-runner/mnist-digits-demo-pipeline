@@ -70,7 +70,7 @@ jobs:
           path: mlflow-repo
           # replace below with feature branch of `mlflow` repo for testing new
           # UI features using logs from this repo
-          ref: ui_updates
+          ref: uiupdates_2
 
       # export static ui data (for easier offline debugging)
       - name: "Store ui_static_data.js with data for UI"
