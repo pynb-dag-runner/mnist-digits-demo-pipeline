@@ -36,6 +36,7 @@ docker-run-in-cicd:
 	docker run --rm \
 	    --network none \
 	    --env RUN_ENVIRONMENT=$(RUN_ENVIRONMENT) \
+	    $(EXTRA_FLAGS) \
 	    --volume $$(pwd)/workspace:/home/host_user/workspace \
 	    --volume $$(pwd)/pipeline-outputs:/pipeline-outputs \
 	    --workdir /home/host_user/workspace/ \
