@@ -1,6 +1,6 @@
 from pathlib import Path
-import uuid, datetime, shutil
-from typing import List
+import uuid, shutil
+from functools import lru_cache
 
 #
 import ray
@@ -13,6 +13,7 @@ from pynb_dag_runner.core.dag_runner import (
     fan_in,
     start_and_await_tasks,
 )
+from pynb_dag_runner.run_pipeline_helpers import get_github_env_variables
 
 from pynb_dag_runner.notebooks_helpers import JupytextNotebook
 from pynb_dag_runner.helpers import write_json
@@ -25,14 +26,15 @@ shutil.rmtree("/tmp/spans", ignore_errors=True)
 ray.init(_tracing_startup_hook="ray.util.tracing.setup_local_tmp_tracing:setup_tracing")
 
 
-def get_args():
+@lru_cache
+def args():
     from argparse import ArgumentParser
 
     parser = ArgumentParser()
     parser.add_argument(
         "--otel_spans_outputfile",
         type=str,
-        help="output file path for logging OpenTelemtry spans of pipeline run",
+        help="output file path for logging OpenTelemetry spans of pipeline run",
     )
     parser.add_argument(
         "--data_lake_root",
@@ -46,23 +48,15 @@ def get_args():
         help="run environment for running pipeline",
     )
 
-    args = parser.parse_args()
-
-    print("*** Command line parameters ***")
-    print(f"  - otel_spans_outputfile : {args.otel_spans_outputfile}")
-    print(f"  - data_lake_root        : {args.data_lake_root}")
-    print(f"  - run_environment       : {args.run_environment}")
-
-    return args
+    return parser.parse_args()
 
 
-args = get_args()
-
-COMMON_PARAMETERS = {
+GLOBAL_PARAMETERS = {
     # data lake root is pipeline-scoped parameter
-    "pipeline.data_lake_root": args.data_lake_root,
-    "pipeline.run_environment": args.run_environment,
+    "pipeline.data_lake_root": args().data_lake_root,
+    "pipeline.run_environment": args().run_environment,
     "pipeline.pipeline_run_id": str(uuid.uuid4()),
+    **get_github_env_variables(),
 }
 
 
@@ -76,8 +70,17 @@ def make_notebook_task(
         tmp_dir=nb_path,
         timeout_s=timeout_s,
         max_nr_retries=max_nr_retries,
-        parameters={**COMMON_PARAMETERS, **task_parameters},
+        parameters={
+            **GLOBAL_PARAMETERS,
+            **task_parameters,
+        },
     )
+
+
+print("---- Command line parameters ----")
+print(f"  - otel_spans_outputfile : {args().otel_spans_outputfile}")
+print(f"  - data_lake_root        : {args().data_lake_root}")
+print(f"  - run_environment       : {args().run_environment}")
 
 
 print("---- Setting up tasks and task dependencies ----")
@@ -135,6 +138,6 @@ for s in rec.spans.exception_events():
 print("---- Writing spans ----")
 
 print(" - Total number of spans recorded   :", len(rec.spans))
-write_json(Path(args.otel_spans_outputfile), list(rec.spans))
+write_json(Path(args().otel_spans_outputfile), list(rec.spans))
 
 print("---- Done ----")

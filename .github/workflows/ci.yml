@@ -33,7 +33,7 @@ permissions:
   contents: "none"  # project repo:s are public
 
 jobs:
-  run-all-tests:
+  run-all-tests-and-pipeline:
     runs-on: [ubuntu-20.04]
 
     steps:
@@ -41,9 +41,6 @@ jobs:
         shell: bash
         run: |
             echo "RUN_ENVIRONMENT=ci" >> $GITHUB_ENV
-
-            echo "=== print-env ==="
-            printenv
 
       - uses: actions/checkout@v2
         with:
@@ -107,11 +104,47 @@ jobs:
         shell: bash
         working-directory: ${{ github.workspace }}
         run: |
+            # ---- Ensure that github environment variables are passed into
+            # ---- the Docker container when starting the pipeline run
+            #
+            # First, convert variable list into bash array. Note that there
+            # are no newlines in the input variable, and all newlines in the
+            # yaml are replaced with spaces.
+            #
+            # See https://stackoverflow.com/a/21699210
+            export ENV_ARR=($ENVS_TO_EXPORT_TO_DOCKER)
+
+            # Second, add "-e" prefix to each array entry, and join all
+            # entries into bash string. Result string is
+            # "-eGITHUB_REPOSITORY ... -eGITHUB_EVENT_NAME", and this is
+            # added as-is when calling docker run.
+            #
+            # See https://stackoverflow.com/a/30971572
+            export EXTRA_FLAGS="${ENV_ARR[@]/#/-e}"
+
             make docker-run-in-cicd \
                 RUN_ENVIRONMENT="ci" \
+                EXTRA_FLAGS="$EXTRA_FLAGS" \
                 COMMAND="\
                     (cd common; make install) && \
                     (cd mnist-demo-pipeline; make run)"
+
+        env:
+            ENVS_TO_EXPORT_TO_DOCKER:
+              GITHUB_REPOSITORY
+              GITHUB_WORKFLOW
+              GITHUB_ACTION_REF
+              RUNNER_NAME
+              GITHUB_RUN_ID
+              GITHUB_ACTOR
+              GITHUB_JOB
+              GITHUB_BASE_REF
+              GITHUB_HEAD_REF
+              GITHUB_SHA
+              GITHUB_REF
+              GITHUB_REF_TYPE
+              GITHUB_REF_NAME
+              GITHUB_EVENT_NAME
 
       - name: "mnist-digits-demo-pipeline: Render Gantt and dependency graphs"
         shell: bash
