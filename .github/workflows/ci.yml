@@ -133,7 +133,6 @@ jobs:
             ENVS_TO_EXPORT_TO_DOCKER:
               GITHUB_REPOSITORY
               GITHUB_WORKFLOW
-              GITHUB_ACTION_REF
               RUNNER_NAME
               GITHUB_RUN_ID
               GITHUB_ACTOR
