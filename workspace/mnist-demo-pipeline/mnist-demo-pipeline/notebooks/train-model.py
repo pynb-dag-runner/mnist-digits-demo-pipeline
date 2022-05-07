@@ -46,7 +46,7 @@ def load_and_limit_train_data(P):
     y_train_all = read_numpy(datalake_root(P) / "train-data" / "labels.numpy")
 
     assert isinstance(P["task.nr_train_images"], int)
-    
+
     # Note: train_test_split will fail if split is 0 or 100%.
     assert 0 < P["task.nr_train_images"] < len(y_train_all)
 
@@ -62,6 +62,7 @@ def load_and_limit_train_data(P):
 
     assert X_train.shape == (len(y_train), 8 * 8)
     return X_train, y_train
+
 
 X_train, y_train = load_and_limit_train_data(P)
 
@@ -103,7 +104,9 @@ assert y_train_labels.shape == y_train_max_prob_labels.shape == y_train.shape
 
 # If the predicted labels would coincide with the labels that have
 # maximum probability, the below number would be zero
-logger.log_int("nr_max_prob_neq_label", int(sum(y_train_max_prob_labels != y_train_labels)))
+logger.log_int(
+    "nr_max_prob_neq_label", int(sum(y_train_max_prob_labels != y_train_labels))
+)
 
 # %% [markdown]
 # The explanation is (likely) explained in the SVC source, see

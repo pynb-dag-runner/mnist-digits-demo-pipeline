@@ -10,7 +10,7 @@
 # %%
 # ----------------- Parameters for interactive development --------------
 P = {
-    "data_lake_root": "/pipeline-outputs/data-lake",
+    "pipeline.data_lake_root": "/pipeline-outputs/data-lake",
     "task.nr_train_images": 600,
 }
 # %% tags=["parameters"]
@@ -32,11 +32,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 #
-from common.io import datalake_root
-from common.genlogger import GenLogger
+from pynb_dag_runner.tasks.task_opentelemetry_logging import PydarLogger
 
-# %%
-logger = GenLogger(None)
+#
+from common.io import datalake_root
+
+logger = PydarLogger(P)
 
 # %% [markdown]
 # ## Load persisted onnx-model and evaluation data
@@ -52,8 +53,8 @@ onnx_inference_session = read_onnx(
     / "model.onnx"
 )
 
-logger.log("onnx_inputs", get_onnx_inputs(onnx_inference_session))
-logger.log("onnx_outputs", get_onnx_outputs(onnx_inference_session))
+logger.log_value("onnx_inputs", get_onnx_inputs(onnx_inference_session))
+logger.log_value("onnx_outputs", get_onnx_outputs(onnx_inference_session))
 
 # %%
 # load evaluation data
@@ -134,7 +135,7 @@ fig = plot_per_digit_probabilities(y_pred_probs_test)
 # being roughly evenly distributed in the data.
 
 # %%
-logger.log_image("per-digit-probabilities.png", fig)
+logger.log_figure("per-digit-probabilities.png", fig)
 
 # %% [markdown]
 # ### Plot ROC curves for individual one-vs-rest classifiers
@@ -145,6 +146,9 @@ from sklearn import metrics
 
 # %%
 def plot_roc_curves(y, y_pred_probs):
+    # based on example code
+    # https://scikit-learn.org/stable/auto_examples/model_selection/plot_roc.html
+
     fig, axs = plt.subplots(nrows=2, ncols=5, figsize=(16, 8))
 
     roc_auc_dict = {}
@@ -153,9 +157,10 @@ def plot_roc_curves(y, y_pred_probs):
         it.product(range(2), range(5)), range(10), axs.reshape(-1)
     ):
         fpr, tpr, _ = metrics.roc_curve(y == digit, y_pred_probs[:, digit])
-        roc_auc_dict[digit] = metrics.auc(fpr, tpr)
+        auc = metrics.auc(fpr, tpr)
+        roc_auc_dict[str(digit)] = auc
 
-        ax.plot(fpr, tpr, label=f"ROC AUC={round(roc_auc_dict[digit], 3)}")
+        ax.plot(fpr, tpr, label=f"ROC AUC={round(auc, 3)}")
 
         ax.set_title(f"\nDigit {digit}", fontsize=16)
         if r == 1:
@@ -183,10 +188,13 @@ def plot_roc_curves(y, y_pred_probs):
 roc_auc_dict, fig = plot_roc_curves(y_test, y_pred_probs_test)
 
 # %%
-logger.log_image("per-digit-roc-curves.png", fig)
+logger.log_figure("per-digit-roc-curves.png", fig)
 
 # %%
-logger.log("roc_auc_per_digit", roc_auc_dict)
+roc_auc_dict
+
+# %%
+logger.log_value("roc_auc_per_digit", roc_auc_dict)
 
 # %% [markdown]
 # ### Compute and log mean ROC AUC score averaged over all digits
@@ -194,7 +202,7 @@ logger.log("roc_auc_per_digit", roc_auc_dict)
 # %%
 roc_auc_macro = np.mean(list(roc_auc_dict.values()))
 
-logger.log("roc_auc_class_mean", roc_auc_macro)
+logger.log_float("roc_auc_class_mean", roc_auc_macro)
 
 # assert that the same value can be computed directly using sklearn
 assert roc_auc_macro == metrics.roc_auc_score(
