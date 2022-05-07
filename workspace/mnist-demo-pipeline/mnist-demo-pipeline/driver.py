@@ -27,6 +27,7 @@ print(f" - Number of cores available {multiprocessing.cpu_count()}")
 shutil.rmtree("/tmp/spans", ignore_errors=True)
 print(
     ray.init(
+        namespace="pydar-ray-cluster",
         num_cpus=multiprocessing.cpu_count(),
         _tracing_startup_hook="ray.util.tracing.setup_local_tmp_tracing:setup_tracing",
     )
