@@ -1,6 +1,7 @@
 from pathlib import Path
 import uuid, shutil
 from functools import lru_cache
+from typing import List
 
 #
 import ray
@@ -98,26 +99,30 @@ run_in_sequence(task_ingest, task_split_train_test)
 
 # --- tasks defined using old API ---
 
-# nr_train_digits: List[int] = {
-#     "ci": list(range(600, 1201, 100)) + [1257],
-#     "dev": [400, 500, 600],
-# }[args.run_environment]
+nr_train_digits: List[int] = {
+    "ci": [600, 800, 1000, 1200],  # list(range(600, 1201, 100)),
+    "dev": [400, 500, 600],
+}[args().run_environment]
 
-# task_trainers = [
-#     make_notebook_task(
-#         notebook_path=Path("./notebooks/train-model.py"),
-#         parameters={"parameters.task.nr_train_images": k},
-#     )
-#     for k in nr_train_digits
-# ]
+task_trainers = [
+    make_notebook_task(
+        nb_name="train-model.py",
+        task_parameters={"task.nr_train_images": k},
+    )
+    for k in nr_train_digits
+]
 
-# task_benchmarks = [
-#     make_notebook_task(
-#         notebook_path=Path("./notebooks/benchmark-model.py"),
-#         parameters={"parameters.task.nr_train_images": k},
-#     )
-#     for k in nr_train_digits
-# ]
+task_benchmarks = [
+    make_notebook_task(
+        nb_name="benchmark-model.py",
+        task_parameters={"task.nr_train_images": k},
+    )
+    for k in nr_train_digits
+]
+
+for task_train, task_benchmark in zip(task_trainers, task_benchmarks):
+    run_in_sequence(task_split_train_test, task_train, task_benchmark)
+
 
 # task_summary = make_notebook_task(notebook_path=Path("./notebooks/summary.py"))
 
@@ -125,7 +130,9 @@ run_in_sequence(task_ingest, task_split_train_test)
 print("---- Running mnist-demo-pipeline ----")
 
 with SpanRecorder() as rec:
-    _ = start_and_await_tasks([task_ingest], [task_eda, task_split_train_test], arg={})
+    _ = start_and_await_tasks(
+        [task_ingest], [task_eda, task_split_train_test] + task_benchmarks, arg={}
+    )
 
 ray.shutdown()
 

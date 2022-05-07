@@ -14,7 +14,7 @@
 # %%
 # ----------------- Parameters for interactive development --------------
 P = {
-    "data_lake_root": "/pipeline-outputs/data-lake",
+    "pipeline.data_lake_root": "/pipeline-outputs/data-lake",
     "task.nr_train_images": 600,
 }
 # %% tags=["parameters"]
@@ -29,10 +29,9 @@ P = {
 
 
 # %%
-from common.genlogger import GenLogger
+from pynb_dag_runner.tasks.task_opentelemetry_logging import PydarLogger
 
-# %%
-logger = GenLogger(None)
+logger = PydarLogger(P)
 
 
 # %% [markdown]
@@ -47,21 +46,19 @@ def load_and_limit_train_data(P):
     y_train_all = read_numpy(datalake_root(P) / "train-data" / "labels.numpy")
 
     assert isinstance(P["task.nr_train_images"], int)
-    assert 0 < P["task.nr_train_images"] <= len(y_train_all)
 
-    if P["task.nr_train_images"] == len(y_train_all):
-        # train_test_split fails in this case
-        X_train, y_train = X_train_all, y_train_all
-    else:
-        X_train, _, y_train, _ = train_test_split(
-            X_train_all,
-            y_train_all,
-            train_size=P["task.nr_train_images"],
-            test_size=None,
-            stratify=y_train_all,
-            shuffle=True,
-            random_state=123,
-        )
+    # Note: train_test_split will fail if split is 0 or 100%.
+    assert 0 < P["task.nr_train_images"] < len(y_train_all)
+
+    X_train, _, y_train, _ = train_test_split(
+        X_train_all,
+        y_train_all,
+        train_size=P["task.nr_train_images"],
+        test_size=None,
+        stratify=y_train_all,
+        shuffle=True,
+        random_state=123,
+    )
 
     assert X_train.shape == (len(y_train), 8 * 8)
     return X_train, y_train
@@ -107,7 +104,9 @@ assert y_train_labels.shape == y_train_max_prob_labels.shape == y_train.shape
 
 # If the predicted labels would coincide with the labels that have
 # maximum probability, the below number would be zero
-logger.log("nr_max_prob_neq_label", int(sum(y_train_max_prob_labels != y_train_labels)))
+logger.log_int(
+    "nr_max_prob_neq_label", int(sum(y_train_max_prob_labels != y_train_labels))
+)
 
 # %% [markdown]
 # The explanation is (likely) explained in the SVC source, see
