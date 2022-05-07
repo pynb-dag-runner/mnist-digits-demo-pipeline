@@ -100,7 +100,7 @@ run_in_sequence(task_ingest, task_split_train_test)
 # --- tasks defined using old API ---
 
 nr_train_digits: List[int] = {
-    "ci": list(range(600, 1201, 100)),
+    "ci": [600, 800, 1000, 1200], #list(range(600, 1201, 100)),
     "dev": [400, 500, 600],
 }[args().run_environment]
 
