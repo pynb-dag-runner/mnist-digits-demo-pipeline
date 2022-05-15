@@ -9,7 +9,9 @@
 
 # %%
 # ----------------- Parameters for interactive development --------------
-P = {}
+P = {
+    "pipeline.run_environment": "dev",
+}
 # %% tags=["parameters"]
 # - During automated runs parameters will be injected in the below cell -
 # %%
@@ -127,3 +129,5 @@ logger.log_figure("auc-roc-model-performances.png", fig)
 
 # %%
 ###
+
+# %%
