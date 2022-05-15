@@ -3,23 +3,13 @@
 #
 # This notebooks plots the performances (using averaged ROC AUC scores) for models
 # trained with different training sets.
-#
-# Note: The below approach load runlog and genlogger json files from local files. This
-# might not be ideal. These files neither currently capture the hierarchy between tasks
-# (which would be useful when querying).
-#
-# - Could the stored metrics (eg ROC scores) and traces (task timings) be queried
-#   (and correlated) via an API?
-# - Could the OpenTelemetry standard be suitable for that?
 
 # %% [markdown]
 # ### Determine run parameters
 
 # %%
 # ----------------- Parameters for interactive development --------------
-P = {
-    "pipeline.data_lake_root": "/pipeline-outputs/data-lake",
-}
+P = {}
 # %% tags=["parameters"]
 # - During automated runs parameters will be injected in the below cell -
 # %%
@@ -32,83 +22,98 @@ P = {
 
 
 # %%
-import glob
-from pathlib import Path
-
 #
 import pandas as pd
 import matplotlib.pyplot as plt
 
 #
-from pynb_dag_runner.helpers import read_json
-
-#
-from common.genlogger import GenLogger
+from pynb_dag_runner.tasks.task_opentelemetry_logging import PydarLogger
 
 # %%
-logger = GenLogger(None)
+logger = PydarLogger(P=P)
+
+# %%
+from pynb_dag_runner.tasks.task_opentelemetry_logging import (
+    PydarLogger,
+    get_logged_values,
+)
+from pynb_dag_runner.opentelemetry_helpers import _get_all_spans, Spans
 
 
 # %%
-def get_model_benchmarks_data(benchmark_runlogs_filepath: Path):
+def get_model_benchmarks():
     """
-    Return Python dict with summary of model performance for one choice of
-    training set size.
+    Query the OpenTelemetry logs for *this pipeline run* and return
+    all key-values logged from all runs of the benchmark-model.py task
+
+    For testing a json file with OpenTelemetry spans (as an array)
+    can be used as follows:
+
+    - Create output directory `mkdir /tmp/spans`
+    - Run unit tests. This will create pipeline-outputs/opentelemetry-spans.json
+    - Convert this json-array into jsonl format as follows
+
+    jq -c '.[]' /pipeline-outputs/opentelemetry-spans.json > /tmp/spans/data.txt
+
     """
-    benchmark_genlog = read_json(benchmark_runlogs_filepath)
-    benchmark_runlog = read_json(benchmark_runlogs_filepath.parent / "runlog.json")
-    assert benchmark_runlog["out.status"] == "SUCCESS"
+    spans: Spans = Spans(_get_all_spans())
+    print(f"Found {len(spans)} spans")
 
-    return {
-        "pipeline_run_id": benchmark_runlog["parameters.pipeline_run_id"],
-        "nr_train_images": benchmark_runlog["parameters.task.nr_train_images"],
-        "runtime_ms": benchmark_runlog["out.timing.duration_ms"],
-        "roc_auc": benchmark_genlog["key-values"]["roc_auc_class_mean"],
-    }
+    benchmark_spans = (
+        spans
+        # -
+        .filter(["name"], "execute-task")
+        # -
+        .filter(["attributes", "task.notebook"], "notebooks/benchmark-model.py")
+    )
 
+    result = []
+    for s in benchmark_spans:
+        result.append(
+            {
+                "span_id": s["context"]["span_id"],
+                "nr_train_images": s["attributes"]["task.nr_train_images"],
+                "data": get_logged_values(spans.bound_under(s)),
+            }
+        )
 
-def get_all_model_performance_benchmark_data(runlogs_root: str):
-    genlogger_files = [
-        f
-        for f in glob.glob(f"{runlogs_root}/**/*", recursive=True)
-        if f.endswith("genlogger.json") and "benchmark-model" in f
-    ]
-
-    df_data = pd.DataFrame(
-        get_model_benchmarks_data(Path(f)) for f in genlogger_files
-    ).sort_values(by="nr_train_images")
-
-    return df_data
+    return result
 
 
-df_data = get_all_model_performance_benchmark_data(P["runlogs_root"])
-df_data
+def adjust_pandas(df):
+    def column_renamer(col_name: str) -> str:
+        return (
+            col_name
+            # -- 'data.roc_auc_per_digit.4' -> 'roc_auc.4'
+            .replace("data.roc_auc_per_digit", "roc_auc")
+            # -- 'data.roc_auc_class_mean' -> 'roc_auc_mean'
+            .replace("data.roc_auc_class_mean", "roc_auc_mean")
+        )
+
+    return df.rename(column_renamer, axis="columns")
+
 
 # %%
-if len(set(df_data["pipeline_run_id"])) > 1:
-    print("WARNING: runlogs_root contains multiple pipeline runs!")
+df_data = adjust_pandas(pd.json_normalize(get_model_benchmarks()))
+
+# %%
+df_data.round(4)
 
 
 # %%
 def plot_classifier_performance_summary(df_data):
-    fig, (ax0, ax1) = plt.subplots(nrows=2, ncols=1, figsize=(16, 8), sharex=True)
+    fig, ax = plt.subplots(nrows=1, ncols=1, figsize=(16, 4), sharex=True)
 
     #
-    ax0.plot(df_data["nr_train_images"], df_data["roc_auc"], marker="o", linestyle="--")
-    ax0.set_title(
+    ax.plot(
+        df_data["nr_train_images"], df_data["roc_auc_mean"], marker="o", linestyle="--"
+    )
+    ax.set_title(
         f"ROC AUC digit classifier performance on evaluation digits", fontsize=17
     )
-    ax0.set_ylabel("ROC AUC", fontsize=14)
+    ax.set_xlabel("Total number of digits in training set", fontsize=14)
+    ax.set_ylabel("Mean ROC AUC", fontsize=14)
 
-    #
-    ax1.plot(
-        df_data["nr_train_images"], df_data["runtime_ms"], marker="o", linestyle="--"
-    )
-    ax1.set_title(f"Total training wall time [ms]", fontsize=17)
-    ax1.set_xlabel("Number of images in training set", fontsize=14)
-    ax1.set_ylabel("ms", fontsize=14)
-
-    #
     fig.tight_layout()
     fig.show()
 
@@ -118,7 +123,7 @@ def plot_classifier_performance_summary(df_data):
 fig = plot_classifier_performance_summary(df_data)
 
 # %%
-logger.log_image("auc-roc-model-performances.png", fig)
+logger.log_figure("auc-roc-model-performances.png", fig)
 
 # %%
 ###

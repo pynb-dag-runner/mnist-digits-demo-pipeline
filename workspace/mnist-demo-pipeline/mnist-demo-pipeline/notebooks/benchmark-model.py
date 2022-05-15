@@ -52,18 +52,34 @@ onnx_inference_session = read_onnx(
     / f"nr_train_images={P['task.nr_train_images']}"
     / "model.onnx"
 )
+# %% [markdown]
+# ### Record structure of inputs and outputs for ONNX model
+#
+# (this should likely be done in training notebook)
 
-logger.log_value("onnx_inputs", get_onnx_inputs(onnx_inference_session))
-logger.log_value("onnx_outputs", get_onnx_outputs(onnx_inference_session))
+# %%
+import json
+
+onnx_io = json.dumps(
+    {
+        "inputs": get_onnx_inputs(onnx_inference_session),
+        "outputs": get_onnx_outputs(onnx_inference_session),
+    },
+    indent=2,
+)
+
+
+logger.log_artefact("onnx_io_structure.json", onnx_io)
+print(onnx_io)
+
+# %% [markdown]
+# ### Evaluate model performance on evaluation data set
 
 # %%
 # load evaluation data
 X_test = read_numpy(datalake_root(P) / "test-data" / "digits.numpy")
 y_test = read_numpy(datalake_root(P) / "test-data" / "labels.numpy")
 
-
-# %% [markdown]
-# ### Evaluate model on evaluation data set
 
 # %%
 def get_model_outputs(X, onnx_inference_session):
