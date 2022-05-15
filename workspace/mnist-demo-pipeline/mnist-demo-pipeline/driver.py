@@ -134,7 +134,15 @@ fan_in(task_benchmarks, task_summary)
 print("---- Running mnist-demo-pipeline ----")
 
 with SpanRecorder() as rec:
-    _ = start_and_await_tasks([task_ingest], [task_eda, task_summary], arg={})
+    _ = start_and_await_tasks(
+        # Note: here it should not be necessary to await task_benchmarks. fan_in
+        # target task only starts after all dependent tasks are finished, but
+        # dependency logging is done in callbacks that is only awaited in source
+        # tasks. TODO/check this
+        [task_ingest],
+        [task_eda, task_summary] + task_benchmarks,
+        arg={},
+    )
 
 ray.shutdown()
 

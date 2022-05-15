@@ -92,7 +92,7 @@ def adjust_pandas(df):
             .replace("data.roc_auc_class_mean", "roc_auc_mean")
         )
 
-    return df.rename(column_renamer, axis="columns")
+    return df.rename(column_renamer, axis="columns").sort_values(by="nr_train_images")
 
 
 # %%
