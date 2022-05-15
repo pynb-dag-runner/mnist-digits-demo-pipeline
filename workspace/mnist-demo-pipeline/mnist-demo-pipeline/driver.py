@@ -123,16 +123,18 @@ task_benchmarks = [
 for task_train, task_benchmark in zip(task_trainers, task_benchmarks):
     run_in_sequence(task_split_train_test, task_train, task_benchmark)
 
+task_summary = make_notebook_task(
+    nb_name="summary.py",
+    task_parameters={},
+)
 
-# task_summary = make_notebook_task(notebook_path=Path("./notebooks/summary.py"))
+fan_in(task_benchmarks, task_summary)
 
 
 print("---- Running mnist-demo-pipeline ----")
 
 with SpanRecorder() as rec:
-    _ = start_and_await_tasks(
-        [task_ingest], [task_eda, task_split_train_test] + task_benchmarks, arg={}
-    )
+    _ = start_and_await_tasks([task_ingest], [task_eda, task_summary], arg={})
 
 ray.shutdown()
 
