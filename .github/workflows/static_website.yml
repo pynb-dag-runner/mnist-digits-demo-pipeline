@@ -36,7 +36,7 @@ jobs:
           make docker-build
 
       - name: "Fetch all artefacts into directory tree"
-        working-directory: ${{ github.workspace }}/otel_output_parser
+        working-directory: ${{ github.workspace }}/pynb-dag-runner-repo/otel_output_parser
         run: |
           # GITHUB_REPOSITORY has format owner/repo-name.
           make docker-run-command \
