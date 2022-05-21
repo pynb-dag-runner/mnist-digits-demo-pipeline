@@ -28,6 +28,7 @@ jobs:
           repository: pynb-dag-runner/pynb-dag-runner
           path: pynb-dag-runner-repo
           persist-credentials: true
+          ref: tasks_to_makefile
 
       - name: "Build Docker file"
         working-directory: ${{ github.workspace }}/pynb-dag-runner-repo/otel_output_parser
