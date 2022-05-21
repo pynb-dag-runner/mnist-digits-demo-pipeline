@@ -46,7 +46,6 @@ jobs:
                   -e GITHUB_REPOSITORY \
               " \
               COMMAND="\
-                  cd workspace; \
                   pip install -e .; \
                   static_builder \
                       --github_repository $GITHUB_REPOSITORY \
