@@ -91,12 +91,3 @@ test-and-run-pipeline:
 	    )"
 
 	make draw-visuals-from-logged-spans
-
-docker-send-pipeline-run-summary-to-github:
-	@echo "docker-send-pipeline-run-summary-to-github"
-	@make docker-run-in-cicd \
-	    EXTRA_FLAGS="-e GITHUB_TOKEN" \
-	    COMMAND="( \
-	        cd mnist-demo-pipeline; \
-			make send-pipeline-run-summary-to-github; \
-	    )"

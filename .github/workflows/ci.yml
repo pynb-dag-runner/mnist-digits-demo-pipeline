@@ -41,6 +41,7 @@ jobs:
         shell: bash
         run: |
             echo "RUN_ENVIRONMENT=ci" >> $GITHUB_ENV
+            echo "### Testing 1.... :+1:" >> $GITHUB_STEP_SUMMARY
 
       - uses: actions/checkout@v2
         with:
@@ -52,6 +53,7 @@ jobs:
         working-directory: ${{ github.workspace }}
         run: |
             make docker-build-all
+            echo "### Testing 2.... :+1:" >> $GITHUB_STEP_SUMMARY
 
       # -- check and test common package used by multiple tasks in the pipeline --
 
@@ -152,6 +154,18 @@ jobs:
             make draw-visuals-from-logged-spans
 
       # -- store pipeline outputs --
+
+      - name: "Report pipeline summary to to Github actions page"
+        shell: bash
+        working-directory: ${{ github.workspace }}
+        run: |
+            make docker-run-in-cicd \
+                EXTRA_FLAGS="-e GITHUB_TOKEN" \
+                COMMAND="(\
+                    cd mnist-demo-pipeline; \
+                    make send-pipeline-run-summary-to-github \
+                        PIPELINE_OUTPUTS_PATH=/pipeline-outputs/;
+                )"
 
       # Upload action uses a separate token (and not GITHUB_TOKEN), see
       # https://github.com/actions/upload-artifact/issues/197

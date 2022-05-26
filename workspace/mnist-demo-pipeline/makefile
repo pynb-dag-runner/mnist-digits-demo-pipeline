@@ -17,7 +17,7 @@ send-pipeline-run-summary-to-github:
 	    cd mnist-demo-pipeline; \
 	    python3 -u \
 	        reporting.py \
-	        --pipeline_outputs_path /pipeline-outputs/ \
+	        --pipeline_outputs_path ${PIPELINE_OUTPUTS_PATH} \
 	)
 
 test-mypy:
