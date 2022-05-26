@@ -9,6 +9,17 @@ run:
 	        --run_environment ${RUN_ENVIRONMENT} \
 	)
 
+send-pipeline-run-summary-to-github:
+	@echo "Send summary of pipeline run to Github (PR and Github Actions page) ..."
+	# TODO: Abort if RUN_ENVIRONMENT != ci;
+	# TODO: Abort if GITHUB_TOKEN not set
+	(\
+	    cd mnist-demo-pipeline; \
+	    python3 -u \
+	        reporting.py \
+	        --pipeline_outputs_path /pipeline-outputs/ \
+	)
+
 test-mypy:
 	mypy --ignore-missing-imports .
 

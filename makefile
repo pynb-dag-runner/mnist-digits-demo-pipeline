@@ -33,8 +33,7 @@ dev-down:
 ### Define tasks run inside Docker
 
 docker-run-in-cicd:
-	docker run --rm \
-	    --network none \
+	docker run --rm -t \
 	    --env RUN_ENVIRONMENT=$(RUN_ENVIRONMENT) \
 	    $(EXTRA_FLAGS) \
 	    --volume $$(pwd)/workspace:/home/host_user/workspace \
@@ -79,6 +78,7 @@ test-and-run-pipeline:
 	make clean
 
 	make docker-run-in-cicd \
+	    EXTRA_FLAGS="--network none" \
 	    RUN_ENVIRONMENT=$(RUN_ENVIRONMENT) \
 	    COMMAND="( \
 	        cd common; \
@@ -91,3 +91,12 @@ test-and-run-pipeline:
 	    )"
 
 	make draw-visuals-from-logged-spans
+
+docker-send-pipeline-run-summary-to-github:
+	@echo "docker-send-pipeline-run-summary-to-github"
+	@make docker-run-in-cicd \
+	    EXTRA_FLAGS="-e GITHUB_TOKEN" \
+	    COMMAND="( \
+	        cd mnist-demo-pipeline; \
+			make send-pipeline-run-summary-to-github; \
+	    )"
