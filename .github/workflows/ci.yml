@@ -42,6 +42,16 @@ jobs:
         run: |
             echo "RUN_ENVIRONMENT=ci" >> $GITHUB_ENV
 
+            echo "--- GITHUB_STEP_SUMMARY"
+            echo $GITHUB_STEP_SUMMARY
+
+            echo "--- /home/runner/work/"
+            ls -la /home/runner/work/
+
+            echo "--- /home/runner/work/_temp/"
+            ls -la /home/runner/work/_temp/
+            echo "---"
+
       - uses: actions/checkout@v2
         with:
           submodules: true
