@@ -1,3 +1,4 @@
+import json
 from pathlib import Path
 from functools import lru_cache
 
@@ -20,11 +21,24 @@ print(f"--- Command line parameters")
 print(f"  - pipeline_outputs_path         : {args().pipeline_outputs_path}")
 
 
+def get_url_to_this_run(pipeline_outputs_path: Path) -> str:
+    pipeline_attributes = json.loads(
+        (pipeline_outputs_path / "pipeline-outputs" / "pipeline.json").read_text()
+    )["attributes"]
+
+    print(pipeline_attributes)
+
+    repo_owner, repo_name = pipeline_attributes["pipeline.github.repository"].split("/")
+    run_id = pipeline_attributes["pipeline.pipeline_run_id"]
+
+    return f"https://{repo_owner}.github.io/{repo_name}/#/experiments/0/runs/{run_id}"
+
+
 def make_markdown_report(pipeline_outputs_path: Path) -> str:
     report_lines = []
 
-    for file in pipeline_outputs_path.glob("*"):
-        print(file)
+    runlink = get_url_to_this_run(pipeline_outputs_path)
+    report_lines.append(f"Inspect this pipeline run: [Github Pages link]({runlink})")
 
     report_lines.append("## DAG diagram of task dependencies in this pipeline")
     report_lines.append("```mermaid")
