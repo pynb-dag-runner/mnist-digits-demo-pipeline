@@ -28,7 +28,23 @@ print(f"  - pipeline_outputs_path    : {args().pipeline_outputs_path}")
 print(f"  - github_step_summary_path : {args().github_step_summary_path}")
 
 
-print("--- TODO")
+def make_markdown_report(pipeline_outputs_path: Path) -> str:
+    report_lines = []
+
+    for file in pipeline_outputs_path.glob("*"):
+        print(file)
+
+    report_lines.append("# Pipeline run")
+    report_lines.append("- foo 1")
+    report_lines.append("- foo 2")
+    report_lines.append("- `foo 3`")
+
+    return "\n".join(report_lines)
+
+
+args().github_step_summary_path.write_text(
+    make_markdown_report(args().pipeline_outputs_path)
+)
 
 
 print("--- Done ---")
