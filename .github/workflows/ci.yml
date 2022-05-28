@@ -164,8 +164,7 @@ jobs:
                     cd mnist-demo-pipeline; \
                     make send-pipeline-run-summary-to-github \
                         PIPELINE_OUTPUTS_PATH=/pipeline-outputs/ \
-                        GITHUB_STEP_SUMMARY=$GITHUB_STEP_SUMMARY
-
+                        GITHUB_STEP_SUMMARY=$GITHUB_STEP_SUMMARY \
                 )"
 
       # Upload action uses a separate token (and not GITHUB_TOKEN), see
