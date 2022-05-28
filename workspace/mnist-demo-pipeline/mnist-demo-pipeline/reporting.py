@@ -38,7 +38,14 @@ def make_markdown_report(pipeline_outputs_path: Path) -> str:
     report_lines = []
 
     runlink = get_url_to_this_run(pipeline_outputs_path)
-    report_lines.append(f"Inspect this pipeline run: [Github Pages link]({runlink})")
+    report_lines.append(
+        f"Inspect details on this pipeline run: [Github Pages link]({runlink})"
+    )
+    report_lines.append(
+        "(Note: the link points to static site built from build artifacts "
+        "for this repo, and these have a retention period. The link stops working "
+        "if the build artifact has been deleted and site is rebuilt.)"
+    )
 
     report_lines.append("## DAG diagram of task dependencies in this pipeline")
     report_lines.append("```mermaid")
