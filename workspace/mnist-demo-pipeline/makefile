@@ -11,13 +11,12 @@ run:
 
 send-pipeline-run-summary-to-github:
 	@echo "Send summary of pipeline run to Github (PR and Github Actions page) ..."
-	# TODO: Abort if RUN_ENVIRONMENT != ci;
-	# TODO: Abort if GITHUB_TOKEN not set
 	(\
 	    cd mnist-demo-pipeline; \
 	    python3 -u \
 	        reporting.py \
 	        --pipeline_outputs_path ${PIPELINE_OUTPUTS_PATH} \
+	        --github_step_summary_path ${GITHUB_STEP_SUMMARY} \
 	)
 
 test-mypy:
