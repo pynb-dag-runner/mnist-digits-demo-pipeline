@@ -16,7 +16,6 @@ send-pipeline-run-summary-to-github:
 	    python3 -u \
 	        reporting.py \
 	        --pipeline_outputs_path ${PIPELINE_OUTPUTS_PATH} \
-	        --github_step_summary_path ${GITHUB_STEP_SUMMARY} \
 	)
 
 test-mypy:

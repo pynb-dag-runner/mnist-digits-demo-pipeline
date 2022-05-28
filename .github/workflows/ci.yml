@@ -50,16 +50,6 @@ jobs:
             ls -la /home/runner/work/_temp/_runner_file_commands/
             echo "---"
 
-            echo "===================================================="
-            echo "--- touch"
-            touch $GITHUB_STEP_SUMMARY
-            echo "===================================================="
-
-            echo "--- /home/runner/work/_temp/_runner_file_commands/"
-            ls -la /home/runner/work/_temp/_runner_file_commands/
-            echo "===================================================="
-
-
       - uses: actions/checkout@v2
         with:
           submodules: true
@@ -182,8 +172,10 @@ jobs:
                     cd mnist-demo-pipeline; \
                     make send-pipeline-run-summary-to-github \
                         PIPELINE_OUTPUTS_PATH=/pipeline-outputs/ \
-                        GITHUB_STEP_SUMMARY=$GITHUB_STEP_SUMMARY \
                 )"
+
+            ls -la ${{ github.workspace }}/pipeline-outputs
+            cat ${{ github.workspace }}/pipeline-outputs/pipeline_run_summary.md > $GITHUB_STEP_SUMMARY
 
       # Upload action uses a separate token (and not GITHUB_TOKEN), see
       # https://github.com/actions/upload-artifact/issues/197
