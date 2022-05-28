@@ -27,10 +27,14 @@ def make_markdown_report(pipeline_outputs_path: Path) -> str:
         print(file)
 
     report_lines.append("## DAG diagram of task dependencies in this pipeline")
+    report_lines.append("```mermaid")
     report_lines.append((pipeline_outputs_path / "dag.mmd").read_text())
+    report_lines.append("```")
 
     report_lines.append("## Gantt diagram of task runs in pipeline")
+    report_lines.append("```mermaid")
     report_lines.append((pipeline_outputs_path / "gantt.mmd").read_text())
+    report_lines.append("```")
 
     return "\n".join(report_lines)
 
