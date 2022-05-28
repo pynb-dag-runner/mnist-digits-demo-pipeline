@@ -9,8 +9,8 @@ run:
 	        --run_environment ${RUN_ENVIRONMENT} \
 	)
 
-send-pipeline-run-summary-to-github:
-	@echo "Send summary of pipeline run to Github (PR and Github Actions page) ..."
+add-run-summary:
+	@echo "Create summary of pipeline run"
 	(\
 	    cd mnist-demo-pipeline; \
 	    python3 -u \

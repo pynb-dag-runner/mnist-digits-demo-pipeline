@@ -42,14 +42,6 @@ jobs:
         run: |
             echo "RUN_ENVIRONMENT=ci" >> $GITHUB_ENV
 
-            echo "--- GITHUB_STEP_SUMMARY"
-            echo $GITHUB_STEP_SUMMARY
-
-            echo "===================================================="
-            echo "--- /home/runner/work/_temp/_runner_file_commands/"
-            ls -la /home/runner/work/_temp/_runner_file_commands/
-            echo "---"
-
       - uses: actions/checkout@v2
         with:
           submodules: true
@@ -167,14 +159,12 @@ jobs:
         run: |
             # https://github.blog/2022-05-09-supercharging-github-actions-with-job-summaries/
             make docker-run-in-cicd \
-                EXTRA_FLAGS="-e GITHUB_TOKEN" \
                 COMMAND="(\
                     cd mnist-demo-pipeline; \
-                    make send-pipeline-run-summary-to-github \
+                    make add-run-summary \
                         PIPELINE_OUTPUTS_PATH=/pipeline-outputs/ \
                 )"
 
-            ls -la ${{ github.workspace }}/pipeline-outputs
             cat ${{ github.workspace }}/pipeline-outputs/pipeline_run_summary.md > $GITHUB_STEP_SUMMARY
 
       # Upload action uses a separate token (and not GITHUB_TOKEN), see
