@@ -46,8 +46,8 @@ jobs:
             echo $GITHUB_STEP_SUMMARY
 
             echo "===================================================="
-            echo "--- /home/runner/work/_temp/"
-            ls -la /home/runner/work/_temp/
+            echo "--- /home/runner/work/_temp/_runner_file_commands/"
+            ls -la /home/runner/work/_temp/_runner_file_commands/
             echo "---"
 
             echo "===================================================="
@@ -55,8 +55,8 @@ jobs:
             touch $GITHUB_STEP_SUMMARY
             echo "===================================================="
 
-            echo "--- /home/runner/work/_temp/"
-            ls -la /home/runner/work/_temp/
+            echo "--- /home/runner/work/_temp/_runner_file_commands/"
+            ls -la /home/runner/work/_temp/_runner_file_commands/
             echo "===================================================="
 
 
