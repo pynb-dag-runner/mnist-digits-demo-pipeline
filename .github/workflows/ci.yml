@@ -153,6 +153,20 @@ jobs:
 
       # -- store pipeline outputs --
 
+      - name: "Report pipeline summary to to Github actions page"
+        shell: bash
+        working-directory: ${{ github.workspace }}
+        run: |
+            # https://github.blog/2022-05-09-supercharging-github-actions-with-job-summaries/
+            make docker-run-in-cicd \
+                COMMAND="(\
+                    cd mnist-demo-pipeline; \
+                    make add-run-summary \
+                        PIPELINE_OUTPUTS_PATH=/pipeline-outputs/ \
+                )"
+
+            cat ${{ github.workspace }}/pipeline-outputs/pipeline_run_summary.md > $GITHUB_STEP_SUMMARY
+
       # Upload action uses a separate token (and not GITHUB_TOKEN), see
       # https://github.com/actions/upload-artifact/issues/197
       - name: "Store pipeline output files"

@@ -9,6 +9,15 @@ run:
 	        --run_environment ${RUN_ENVIRONMENT} \
 	)
 
+add-run-summary:
+	@echo "Create summary of pipeline run"
+	(\
+	    cd mnist-demo-pipeline; \
+	    python3 -u \
+	        reporting.py \
+	        --pipeline_outputs_path ${PIPELINE_OUTPUTS_PATH} \
+	)
+
 test-mypy:
 	mypy --ignore-missing-imports .
 
