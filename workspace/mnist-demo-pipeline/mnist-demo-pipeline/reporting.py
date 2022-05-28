@@ -41,10 +41,11 @@ def make_markdown_report(pipeline_outputs_path: Path) -> str:
     report_lines.append(
         f"Inspect details on this pipeline run: [Github Pages link]({runlink})"
     )
+    report_lines.append("")
     report_lines.append(
-        "(Note: the link points to static site built from build artifacts "
-        "for this repo, and these have a retention period. The link stops working "
-        "if the build artifact has been deleted and site is rebuilt.)"
+        "(Note: the above link points to static web site built using build artifacts "
+        "for this repo. The link will only work if the correct build artifact "
+        "existed when the site was last built.)"
     )
 
     report_lines.append("## DAG diagram of task dependencies in this pipeline")
