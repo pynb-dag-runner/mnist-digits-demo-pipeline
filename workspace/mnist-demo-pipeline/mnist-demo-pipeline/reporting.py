@@ -26,10 +26,11 @@ def make_markdown_report(pipeline_outputs_path: Path) -> str:
     for file in pipeline_outputs_path.glob("*"):
         print(file)
 
-    report_lines.append("# Pipeline run")
-    report_lines.append("- foo 1")
-    report_lines.append("- foo 2")
-    report_lines.append("- `foo 3`")
+    report_lines.append("## DAG diagram of task dependencies in this pipeline")
+    report_lines.append((pipeline_outputs_path / "dag.mmd").read_text())
+
+    report_lines.append("## Gantt diagram of task runs in pipeline")
+    report_lines.append((pipeline_outputs_path / "gantt.mmd").read_text())
 
     return "\n".join(report_lines)
 
