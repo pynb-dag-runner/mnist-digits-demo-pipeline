@@ -140,8 +140,7 @@ with SpanRecorder() as rec:
         # dependency logging is done in callbacks that is only awaited in source
         # tasks. TODO/check this
         [task_ingest],
-        [task_ingest],
-        # [task_eda, task_summary] + task_benchmarks,
+        [task_eda, task_summary] + task_benchmarks,
         arg={},
     )
 
