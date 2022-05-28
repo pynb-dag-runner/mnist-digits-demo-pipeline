@@ -45,12 +45,20 @@ jobs:
             echo "--- GITHUB_STEP_SUMMARY"
             echo $GITHUB_STEP_SUMMARY
 
-            echo "--- /home/runner/work/"
-            ls -la /home/runner/work/
-
+            echo "===================================================="
             echo "--- /home/runner/work/_temp/"
             ls -la /home/runner/work/_temp/
             echo "---"
+
+            echo "===================================================="
+            echo "--- touch"
+            touch $GITHUB_STEP_SUMMARY
+            echo "===================================================="
+
+            echo "--- /home/runner/work/_temp/"
+            ls -la /home/runner/work/_temp/
+            echo "===================================================="
+
 
       - uses: actions/checkout@v2
         with:
