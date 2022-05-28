@@ -32,8 +32,6 @@ jobs:
       - name: "Build Docker file"
         working-directory: ${{ github.workspace }}/pynb-dag-runner-repo/otel_output_parser
         run: |
-          exit 1
-          fail-this-command
           make docker-build
 
       - name: "Fetch all artefacts into directory tree"
