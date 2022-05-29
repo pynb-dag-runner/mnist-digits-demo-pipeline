@@ -1,11 +1,15 @@
 name: "Reusable workflow to update static website"
 
-# https://docs.github.com/en/actions/using-workflows/reusing-workflows
+# References on reusable workflows:
+# - https://docs.github.com/en/actions/using-workflows/reusing-workflows
+# - https://github.community/t/cant-call-reusable-workflow-unexpected-value-uses/204182
+
 on:
   workflow_call:
 
 jobs:
   update-static-website:
+    name: Build and deploy static website
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
@@ -39,7 +43,7 @@ jobs:
                       --output_static_mlflow_data /github_workspace/ui_static_data.js; \
               "
         env:
-          GITHUB_TOKEN: ${{ secrets.CALLING_WORKFLOW_SECRET }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       ###
       ### Make static ML Flow
@@ -97,5 +101,5 @@ jobs:
           git commit -m "update"
 
           git push --force \
-            https://my_token_user:${{ secrets.CALLING_WORKFLOW_SECRET }}@github.com/${GITHUB_REPOSITORY}.git \
+            https://my_token_user:${{ secrets.GITHUB_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git \
             gh-pages:gh-pages

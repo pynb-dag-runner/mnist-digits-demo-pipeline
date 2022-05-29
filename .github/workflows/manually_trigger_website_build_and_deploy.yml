@@ -1,0 +1,9 @@
+name: "Run automated tests and the mnist-digit-demo-pipeline"
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy-static-mlflow-site:
+    runs-on: ubuntu-20.04
+    uses: pynb-dag-runner/mnist-digits-demo-pipeline/.github/workflows/build-and-deploy-static-mlflow-site.yml@chain_ghas

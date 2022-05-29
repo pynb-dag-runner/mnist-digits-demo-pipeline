@@ -179,9 +179,11 @@ jobs:
           if-no-files-found: error
           retention-days: 20
 
-  # -- cd --
+  # # -- cd --
   build-and-deploy-static-mlflow-site:
+    needs: run-all-tests-and-pipeline
+
     permissions:
       contents: write # grant write access to update repo's static website
-    steps:
-      - uses: ./.github/workflows/build-and-deploy-static-mlflow-site
+
+    uses: pynb-dag-runner/mnist-digits-demo-pipeline/.github/workflows/build-and-deploy-static-mlflow-site.yml@chain_ghas
