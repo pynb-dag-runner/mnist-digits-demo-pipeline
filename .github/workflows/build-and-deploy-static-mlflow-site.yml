@@ -1,26 +1,15 @@
-name: "Update static website"
+name: "Reusable workflow to update static website"
+
+# References on reusable workflows:
+# - https://docs.github.com/en/actions/using-workflows/reusing-workflows
+# - https://github.community/t/cant-call-reusable-workflow-unexpected-value-uses/204182
 
 on:
-  push:
-    branches:
-      - development
-
-  pull_request:
-    branches:
-      - development
-
-  workflow_dispatch:
-
-permissions:
-  contents: write # need write access to this repo to update static website
-
-defaults:
-  run:
-    shell: bash
-    # working-directory: ${{ github.workspace }}
+  workflow_call:
 
 jobs:
   update-static-website:
+    name: Build and deploy static website
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
@@ -31,11 +20,13 @@ jobs:
 
       - name: "Build Docker file"
         working-directory: ${{ github.workspace }}/pynb-dag-runner-repo/otel_output_parser
+        shell: bash
         run: |
           make docker-build
 
       - name: "Fetch all artefacts into directory tree"
         working-directory: ${{ github.workspace }}/pynb-dag-runner-repo/otel_output_parser
+        shell: bash
         run: |
           # GITHUB_REPOSITORY has format owner/repo-name.
           make docker-run-command \
@@ -52,7 +43,7 @@ jobs:
                       --output_static_mlflow_data /github_workspace/ui_static_data.js; \
               "
         env:
-          GITHUB_TOKEN: ${{ secrets.github_token }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       ###
       ### Make static ML Flow
@@ -78,6 +69,7 @@ jobs:
 
       - name: "Build static ML Flow"
         working-directory: ${{ github.workspace }}/mlflow-repo/mlflow/server/js
+        shell: bash
         run: |
           # copy static pipeline-task-run into ui-source directory
           cp ${{ github.workspace }}/ui_static_data.js \
@@ -92,6 +84,7 @@ jobs:
       ###
       - name: "Push www-root content to repo gh-pages branch"
         working-directory: ${{ github.workspace }}/www-root
+        shell: bash
         run: |
           # Github pages does not allow directory listing, add files in root
           # for troubleshooting
@@ -108,5 +101,5 @@ jobs:
           git commit -m "update"
 
           git push --force \
-            https://my_token_user:${{ secrets.github_token }}@github.com/${GITHUB_REPOSITORY}.git \
+            https://my_token_user:${{ secrets.GITHUB_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git \
             gh-pages:gh-pages

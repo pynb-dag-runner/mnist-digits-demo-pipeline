@@ -1,40 +1,12 @@
-name: "Run automated tests and the mnist-digit-demo-pipeline"
+name: "Reusable workflow to run automated tests and the mnist-digit-demo-pipeline"
 
 on:
-  push:
-    branches:
-      - development
-
-  # See:
-  # https://securitylab.github.com/research/github-actions-preventing-pwn-requests/
-  # https://docs.github.com/en/actions/reference/events-that-trigger-workflows#pull_request
-  pull_request:
-    types: [opened, synchronize, reopened]
-    branches:
-      - development
-
-  workflow_dispatch:
-
-  # Run daily at 6:22 UTC
-  schedule:
-    - cron: "22 6 * * *"
-
-# Give GITHUB_TOKEN minimal permissions (ie., only metadata read-access). To
-# verify this, check the "Set up jobs" section in the Github actions log.
-#
-# See:
-# https://docs.github.com/en/actions/reference/authentication-in-a-workflow
-# https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository
-# https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#permissions
-#
-# and also links in:
-# https://github.blog/changelog/2021-04-20-github-actions-control-permissions-for-github_token/
-permissions:
-  contents: "none"  # project repo:s are public
+  workflow_call:
 
 jobs:
-  run-all-tests-and-pipeline:
-    runs-on: [ubuntu-20.04]
+  run-tests-pipeline-and-persist-pipeline-outputs:
+    name: Build pipeline tests, run pipeline and persist pipeline outputs
+    runs-on: ubuntu-20.04
 
     steps:
       - name: "Determine run-environment"

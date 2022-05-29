@@ -1,0 +1,45 @@
+name: "Run automated tests, pipeline and deploy results to static reporting site"
+
+on:
+  push:
+    branches:
+      - development
+
+  # See:
+  # https://securitylab.github.com/research/github-actions-preventing-pwn-requests/
+  # https://docs.github.com/en/actions/reference/events-that-trigger-workflows#pull_request
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches:
+      - development
+
+  workflow_dispatch:
+
+  # Run daily at 6:22 UTC
+  schedule:
+    - cron: "22 6 * * *"
+
+jobs:
+  run-all-tests-and-pipeline:
+    # Give GITHUB_TOKEN minimal permissions (ie., only metadata read-access). To
+    # verify this, check the "Set up jobs" section in the Github actions log.
+    #
+    # See:
+    # https://docs.github.com/en/actions/reference/authentication-in-a-workflow
+    # https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository
+    # https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#permissions
+    #
+    # and also links in:
+    # https://github.blog/changelog/2021-04-20-github-actions-control-permissions-for-github_token/
+    permissions:
+      contents: none  # project repo:s are public, so no permissions are needed
+
+    uses: pynb-dag-runner/mnist-digits-demo-pipeline/.github/workflows/ci.yml@main
+
+  build-and-deploy-static-mlflow-site:
+    needs: run-all-tests-and-pipeline
+
+    permissions:
+      contents: write # grant write access to update repo's static website
+
+    uses: pynb-dag-runner/mnist-digits-demo-pipeline/.github/workflows/build-and-deploy-static-mlflow-site.yml@main
