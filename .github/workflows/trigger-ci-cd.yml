@@ -21,8 +21,6 @@ on:
 
 jobs:
   run-all-tests-and-pipeline:
-    runs-on: ubuntu-20.04
-
     # Give GITHUB_TOKEN minimal permissions (ie., only metadata read-access). To
     # verify this, check the "Set up jobs" section in the Github actions log.
     #
