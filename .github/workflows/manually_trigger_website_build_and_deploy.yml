@@ -5,5 +5,7 @@ on:
 
 jobs:
   build-and-deploy-static-mlflow-site:
-    runs-on: ubuntu-20.04
+    permissions:
+      contents: write # grant write access to update repo's static website
+
     uses: pynb-dag-runner/mnist-digits-demo-pipeline/.github/workflows/build-and-deploy-static-mlflow-site.yml@chain_ghas
