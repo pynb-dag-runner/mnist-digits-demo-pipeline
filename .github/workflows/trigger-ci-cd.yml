@@ -1,4 +1,4 @@
-name: "Run automated tests pipeline and deploy results to static reporting site"
+name: "Run automated tests, pipeline and deploy results to static reporting site"
 
 on:
   push:
@@ -34,7 +34,7 @@ jobs:
     permissions:
       contents: none  # project repo:s are public, so no permissions are needed
 
-    uses: pynb-dag-runner/mnist-digits-demo-pipeline/.github/workflows/ci.yml@chain_ghas
+    uses: pynb-dag-runner/mnist-digits-demo-pipeline/.github/workflows/ci.yml@main
 
   build-and-deploy-static-mlflow-site:
     needs: run-all-tests-and-pipeline
@@ -42,4 +42,4 @@ jobs:
     permissions:
       contents: write # grant write access to update repo's static website
 
-    uses: pynb-dag-runner/mnist-digits-demo-pipeline/.github/workflows/build-and-deploy-static-mlflow-site.yml@chain_ghas
+    uses: pynb-dag-runner/mnist-digits-demo-pipeline/.github/workflows/build-and-deploy-static-mlflow-site.yml@main
