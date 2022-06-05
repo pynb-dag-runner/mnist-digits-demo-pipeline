@@ -1,5 +1,5 @@
 from pathlib import Path
-import uuid, shutil
+import multiprocessing, uuid, shutil
 from functools import lru_cache
 from typing import List
 
@@ -21,10 +21,17 @@ from pynb_dag_runner.helpers import write_json
 
 print("---- Initialize Ray cluster ----")
 
+print(f" - Number of cores available {multiprocessing.cpu_count()}")
 # Setup Ray and enable tracing using default OpenTelemetry support; traces are
 # written to files /tmp/spans/<pid>.txt in JSON format.
 shutil.rmtree("/tmp/spans", ignore_errors=True)
-ray.init(_tracing_startup_hook="ray.util.tracing.setup_local_tmp_tracing:setup_tracing")
+print(
+    ray.init(
+        namespace="pydar-ray-cluster",
+        num_cpus=multiprocessing.cpu_count(),
+        _tracing_startup_hook="ray.util.tracing.setup_local_tmp_tracing:setup_tracing",
+    )
+)
 
 
 @lru_cache
@@ -119,6 +126,7 @@ task_benchmarks = [
     )
     for k in nr_train_digits
 ]
+
 
 for task_train, task_benchmark in zip(task_trainers, task_benchmarks):
     run_in_sequence(task_split_train_test, task_train, task_benchmark)
