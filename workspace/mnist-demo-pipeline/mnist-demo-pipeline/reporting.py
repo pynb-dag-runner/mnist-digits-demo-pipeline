@@ -31,7 +31,7 @@ def get_url_to_this_run(pipeline_outputs_path: Path) -> str:
     repo_owner, repo_name = pipeline_attributes["pipeline.github.repository"].split("/")
     run_id = pipeline_attributes["pipeline.pipeline_run_id"]
 
-    return f"https://{repo_owner}.github.io/{repo_name}/#/experiments/0/runs/{run_id}"
+    return f"https://{repo_owner}.github.io/{repo_name}/#/experiments/all-pipelines-runs/runs/{run_id}"
 
 
 def make_markdown_report(pipeline_outputs_path: Path) -> str:
