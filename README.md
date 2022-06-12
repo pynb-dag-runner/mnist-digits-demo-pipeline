@@ -26,7 +26,7 @@ This means:
 - The entire pipeline is run for all commits to pull request to this repository, and to commits to `development` branch.
 - From the build artefacts one can inspect the pipeline's outputs (and, in particular, model performances) for each pull request and commit.
 - The pipeline runs using (free) compute resources provided by Github. No other infrastructure is needed.
-- Cloning this repo gives a new pipeline with its own experiment tracker that can be developed independently.
+- Forking this repo in Github gives a new pipeline with its own experiment tracker that can be developed independently.
 
 The below diagram shows a Gantt chart with runtimes of individual pipeline tasks.
 
