@@ -31,7 +31,7 @@ def get_url_to_this_run(pipeline_outputs_path: Path) -> str:
     repo_owner, repo_name = pipeline_attributes["pipeline.github.repository"].split("/")
     run_id = pipeline_attributes["pipeline.pipeline_run_id"]
 
-    return f"https://{repo_owner}.github.io/{repo_name}/#/experiments/0/runs/{run_id}"
+    return f"https://{repo_owner}.github.io/{repo_name}/#/experiments/all-pipelines-runs/runs/{run_id}"
 
 
 def make_markdown_report(pipeline_outputs_path: Path) -> str:
@@ -42,21 +42,25 @@ def make_markdown_report(pipeline_outputs_path: Path) -> str:
         f"Inspect details on this pipeline run: [Github Pages link]({runlink})"
     )
     report_lines.append("")
-    report_lines.append(
-        "(Note: the above link points to static web site built using build artifacts "
-        "for this repo. The link will only work if the correct build artifact "
-        "existed when the site was last built.)"
-    )
 
     report_lines.append("## DAG diagram of task dependencies in this pipeline")
     report_lines.append("```mermaid")
     report_lines.append((pipeline_outputs_path / "dag.mmd").read_text())
     report_lines.append("```")
+    report_lines.append("Click on a task for more details.")
 
     report_lines.append("## Gantt diagram of task runs in pipeline")
     report_lines.append("```mermaid")
     report_lines.append((pipeline_outputs_path / "gantt.mmd").read_text())
     report_lines.append("```")
+    report_lines.append("---")
+    report_lines.append(
+        "Note: the above links point to a static Github Pages site built using build artifacts "
+        "for this repo. The links will only work (1) after the static site has been built, and "
+        "(2) if the build artifacts existed when the site was last built. "
+        "Since Github Build artifacts has maximum retention period of 90 days, the "
+        "links will not work forever."
+    )
 
     return "\n".join(report_lines)
 
