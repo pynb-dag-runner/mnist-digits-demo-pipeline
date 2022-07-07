@@ -7,7 +7,7 @@ The ML training pipeline is sceduled to run daily using Github actions, but does
  - Github Build Artifacts: persisting pipeline run results (using the OpenTelemetry open standard)
  - Github Pages: static website for model/experiment tracking, [demo site](https://pynb-dag-runner.github.io/mnist-digits-demo-pipeline/). This is built using custom fork of MLFlow.
 
-For more details about the `pynb-dag-runner` framework used in this setup, please see the [documentation site](https://pynb-dag-runner.github.io/pynb-dag-runner/).
+**For more details about the `pynb-dag-runner` framework used in this setup, please see the [documentation site](https://pynb-dag-runner.github.io/pynb-dag-runner/).**
 
 ---
 
