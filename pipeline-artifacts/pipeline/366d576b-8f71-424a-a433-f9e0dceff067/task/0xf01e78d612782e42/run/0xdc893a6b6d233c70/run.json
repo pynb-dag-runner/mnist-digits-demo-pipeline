@@ -1,0 +1,57 @@
+{
+  "span_id": "0xdc893a6b6d233c70",
+  "start_time": "2022-07-07T14:11:36.632286Z",
+  "end_time": "2022-07-07T14:11:46.461700Z",
+  "duration_s": 9.829413890838623,
+  "status": {
+    "status_code": "OK"
+  },
+  "attributes": {
+    "pipeline.data_lake_root": "/pipeline-outputs/data-lake",
+    "pipeline.run_environment": "ci",
+    "pipeline.pipeline_run_id": "366d576b-8f71-424a-a433-f9e0dceff067",
+    "pipeline.github.repository": "pynb-dag-runner/mnist-digits-demo-pipeline",
+    "pipeline.github.workflow": "Run automated tests, pipeline and deploy results to static reporting site",
+    "pipeline.github.runner_name": "Hosted Agent",
+    "pipeline.github.run_id": "2630097778",
+    "pipeline.github.actor": "matiasdahl",
+    "pipeline.github.job": "run-tests-pipeline-and-persist-pipeline-outputs",
+    "pipeline.github.base_ref": "development",
+    "pipeline.github.head_ref": "try-C-hyperparameter",
+    "pipeline.github.sha": "2e68fc4d090046a0d419e76130414dbc4e2cbe82",
+    "pipeline.github.ref": "refs/pull/55/merge",
+    "pipeline.github.ref_type": "branch",
+    "pipeline.github.ref_name": "55/merge",
+    "pipeline.github.event_name": "pull_request",
+    "task.notebook": "notebooks/eda.py",
+    "task.task_type": "jupytext",
+    "task.max_nr_retries": 1,
+    "task.num_cpus": 1,
+    "run.retry_nr": 0
+  },
+  "logged_values": {
+    "nr_digits": {
+      "value": 1797,
+      "type": "int"
+    },
+    "pixels_per_digit": {
+      "value": 64,
+      "type": "int"
+    },
+    "counts_per_digit": {
+      "value": {
+        "0": 178,
+        "1": 182,
+        "2": 177,
+        "3": 183,
+        "4": 181,
+        "5": 182,
+        "6": 181,
+        "7": 179,
+        "8": 174,
+        "9": 180
+      },
+      "type": "json"
+    }
+  }
+}

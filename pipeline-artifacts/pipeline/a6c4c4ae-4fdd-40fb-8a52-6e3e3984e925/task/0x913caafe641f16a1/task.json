@@ -1,0 +1,32 @@
+{
+  "span_id": "0x913caafe641f16a1",
+  "start_time": "2022-07-14T17:37:25.260236Z",
+  "end_time": "2022-07-14T17:37:40.930018Z",
+  "duration_s": 15.669781923294067,
+  "status": {
+    "status_code": "OK"
+  },
+  "attributes": {
+    "pipeline.data_lake_root": "/pipeline-outputs/data-lake",
+    "pipeline.run_environment": "ci",
+    "pipeline.pipeline_run_id": "a6c4c4ae-4fdd-40fb-8a52-6e3e3984e925",
+    "pipeline.github.repository": "pynb-dag-runner/mnist-digits-demo-pipeline",
+    "pipeline.github.workflow": "Run automated tests, pipeline and deploy results to static reporting site",
+    "pipeline.github.runner_name": "GitHub Actions 2",
+    "pipeline.github.run_id": "2668450777",
+    "pipeline.github.actor": "matiasdahl",
+    "pipeline.github.job": "run-tests-pipeline-and-persist-pipeline-outputs",
+    "pipeline.github.base_ref": "",
+    "pipeline.github.head_ref": "",
+    "pipeline.github.sha": "147a1be9916173fd4d2cd011d8d51e3411215850",
+    "pipeline.github.ref": "refs/heads/development",
+    "pipeline.github.ref_type": "branch",
+    "pipeline.github.ref_name": "development",
+    "pipeline.github.event_name": "schedule",
+    "task.nr_train_images": 1200,
+    "task.notebook": "notebooks/train-model.py",
+    "task.task_type": "jupytext",
+    "task.num_cpus": 1,
+    "task.max_nr_retries": 1
+  }
+}

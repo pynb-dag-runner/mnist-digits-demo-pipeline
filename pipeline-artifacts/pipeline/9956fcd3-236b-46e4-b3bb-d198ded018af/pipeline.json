@@ -1,0 +1,78 @@
+{
+  "task_dependencies": [
+    [
+      "0x29414682c6d82bdf",
+      "0x04f05ac3a9d18343"
+    ],
+    [
+      "0xa030aa1069be8487",
+      "0x2b7a826ae738f5c1"
+    ],
+    [
+      "0x29414682c6d82bdf",
+      "0x3846aa419a88af20"
+    ],
+    [
+      "0x2b7a826ae738f5c1",
+      "0xc0b3624d52237757"
+    ],
+    [
+      "0xc937eafa22646c6c",
+      "0x3c8e937af2ac7831"
+    ],
+    [
+      "0xc937eafa22646c6c",
+      "0x29414682c6d82bdf"
+    ],
+    [
+      "0x29414682c6d82bdf",
+      "0x44548d710cf01316"
+    ],
+    [
+      "0x04f05ac3a9d18343",
+      "0x5a2436511c40b447"
+    ],
+    [
+      "0x44548d710cf01316",
+      "0x3ef1255ea7825642"
+    ],
+    [
+      "0x29414682c6d82bdf",
+      "0xa030aa1069be8487"
+    ],
+    [
+      "0x5a2436511c40b447",
+      "0xc0b3624d52237757"
+    ],
+    [
+      "0x3ef1255ea7825642",
+      "0xc0b3624d52237757"
+    ],
+    [
+      "0x3846aa419a88af20",
+      "0x1e4b006096ac64ab"
+    ],
+    [
+      "0x1e4b006096ac64ab",
+      "0xc0b3624d52237757"
+    ]
+  ],
+  "attributes": {
+    "pipeline.data_lake_root": "/pipeline-outputs/data-lake",
+    "pipeline.run_environment": "ci",
+    "pipeline.pipeline_run_id": "9956fcd3-236b-46e4-b3bb-d198ded018af",
+    "pipeline.github.repository": "pynb-dag-runner/mnist-digits-demo-pipeline",
+    "pipeline.github.workflow": "Run automated tests, pipeline and deploy results to static reporting site",
+    "pipeline.github.runner_name": "Hosted Agent",
+    "pipeline.github.run_id": "2688640586",
+    "pipeline.github.actor": "matiasdahl",
+    "pipeline.github.job": "run-tests-pipeline-and-persist-pipeline-outputs",
+    "pipeline.github.base_ref": "",
+    "pipeline.github.head_ref": "",
+    "pipeline.github.sha": "147a1be9916173fd4d2cd011d8d51e3411215850",
+    "pipeline.github.ref": "refs/heads/development",
+    "pipeline.github.ref_type": "branch",
+    "pipeline.github.ref_name": "development",
+    "pipeline.github.event_name": "schedule"
+  }
+}

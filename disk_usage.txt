@@ -1,0 +1,11 @@
+4.0K	asset-manifest.json
+8.0K	favicon.ico
+2.1M	fontawesome
+4.0K	index.html
+500K	list_all_files.txt
+4.0K	manifest.json
+748K	pdf.worker.js
+247M	pipeline-artifacts
+4.0K	precache-manifest.3a9fde4269f003881b1be483b477760b.js
+4.0K	service-worker.js
+12M	static

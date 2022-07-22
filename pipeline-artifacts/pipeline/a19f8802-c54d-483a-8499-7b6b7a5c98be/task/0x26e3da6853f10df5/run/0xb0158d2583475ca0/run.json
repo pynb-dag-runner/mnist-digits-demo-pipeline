@@ -1,0 +1,54 @@
+{
+  "span_id": "0xb0158d2583475ca0",
+  "start_time": "2022-07-17T06:46:13.680719Z",
+  "end_time": "2022-07-17T06:46:28.994711Z",
+  "duration_s": 15.313992023468018,
+  "status": {
+    "status_code": "OK"
+  },
+  "attributes": {
+    "pipeline.data_lake_root": "/pipeline-outputs/data-lake",
+    "pipeline.run_environment": "ci",
+    "pipeline.pipeline_run_id": "a19f8802-c54d-483a-8499-7b6b7a5c98be",
+    "pipeline.github.repository": "pynb-dag-runner/mnist-digits-demo-pipeline",
+    "pipeline.github.workflow": "Run automated tests, pipeline and deploy results to static reporting site",
+    "pipeline.github.runner_name": "Hosted Agent",
+    "pipeline.github.run_id": "2684555341",
+    "pipeline.github.actor": "matiasdahl",
+    "pipeline.github.job": "run-tests-pipeline-and-persist-pipeline-outputs",
+    "pipeline.github.base_ref": "",
+    "pipeline.github.head_ref": "",
+    "pipeline.github.sha": "147a1be9916173fd4d2cd011d8d51e3411215850",
+    "pipeline.github.ref": "refs/heads/development",
+    "pipeline.github.ref_type": "branch",
+    "pipeline.github.ref_name": "development",
+    "pipeline.github.event_name": "schedule",
+    "task.nr_train_images": 600,
+    "task.notebook": "notebooks/benchmark-model.py",
+    "task.task_type": "jupytext",
+    "task.num_cpus": 1,
+    "task.max_nr_retries": 1,
+    "run.retry_nr": 0
+  },
+  "logged_values": {
+    "roc_auc_per_digit": {
+      "value": {
+        "0": 1.0,
+        "1": 0.9992502343017807,
+        "2": 1.0,
+        "3": 0.9998500468603562,
+        "4": 0.9991617131534827,
+        "5": 0.998987816307404,
+        "6": 0.999961896052431,
+        "7": 0.9998475842097241,
+        "8": 0.9945223833543506,
+        "9": 0.9988949855204999
+      },
+      "type": "json"
+    },
+    "roc_auc_class_mean": {
+      "value": 0.9990476659760029,
+      "type": "float"
+    }
+  }
+}
